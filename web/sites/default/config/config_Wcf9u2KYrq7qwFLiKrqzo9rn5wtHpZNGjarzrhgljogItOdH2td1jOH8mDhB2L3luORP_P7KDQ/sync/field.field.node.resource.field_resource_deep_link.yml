@@ -1,0 +1,19 @@
+uuid: 5a64384b-6c0f-4663-afcd-35bafcb0ce2d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_resource_deep_link
+    - node.type.resource
+id: node.resource.field_resource_deep_link
+field_name: field_resource_deep_link
+entity_type: node
+bundle: resource
+label: 'Deep link'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

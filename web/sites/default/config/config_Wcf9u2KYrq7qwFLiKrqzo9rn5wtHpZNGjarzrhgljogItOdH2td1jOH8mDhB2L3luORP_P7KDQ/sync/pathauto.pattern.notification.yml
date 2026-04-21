@@ -1,0 +1,22 @@
+uuid: ce6f1bbb-b012-483d-8d3b-1e7a448ab25f
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: notification
+label: Notification
+type: 'canonical_entities:node'
+pattern: '/notification/[node:nid]'
+selection_criteria:
+  108303fe-1cce-405b-a544-75946c0b7d12:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 108303fe-1cce-405b-a544-75946c0b7d12
+    context_mapping:
+      node: node
+    bundles:
+      notification: notification
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,9 @@
+uuid: e07e060a-9704-41d8-a14c-8ae47bf305a8
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media theme'
+vid: media_theme
+description: null
+weight: 0
+new_revision: false

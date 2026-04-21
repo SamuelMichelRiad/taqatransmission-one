@@ -1,0 +1,14 @@
+uuid: 8040f267-7e71-4dcf-ace9-d96dc8dd285d
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.notification_manager
+  module:
+    - user
+id: user_add_role_action.notification_manager
+label: 'Add the Notification manager role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: notification_manager

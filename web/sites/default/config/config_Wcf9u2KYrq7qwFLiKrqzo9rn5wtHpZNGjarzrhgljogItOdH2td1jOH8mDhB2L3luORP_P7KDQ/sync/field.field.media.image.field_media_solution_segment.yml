@@ -1,0 +1,29 @@
+uuid: 9ce01d81-002e-44ba-8943-da436c8b4469
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_solution_segment
+    - media.type.image
+    - taxonomy.vocabulary.media_solution_segment
+id: media.image.field_media_solution_segment
+field_name: field_media_solution_segment
+entity_type: media
+bundle: image
+label: 'Solution segment'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      media_solution_segment: media_solution_segment
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

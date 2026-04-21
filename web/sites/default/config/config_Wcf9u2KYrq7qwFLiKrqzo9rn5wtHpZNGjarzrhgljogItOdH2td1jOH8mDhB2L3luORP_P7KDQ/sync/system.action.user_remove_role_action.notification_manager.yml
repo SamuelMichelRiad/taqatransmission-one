@@ -1,0 +1,14 @@
+uuid: 731d38df-487d-4502-8d3f-6035e5fa88f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.notification_manager
+  module:
+    - user
+id: user_remove_role_action.notification_manager
+label: 'Remove the Notification manager role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: notification_manager

@@ -1,0 +1,21 @@
+uuid: b0919586-1829-4d31-93a2-f83bdcb6ed4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_image_color_model
+    - media.type.image
+  module:
+    - options
+id: media.image.field_image_color_model
+field_name: field_image_color_model
+entity_type: media
+bundle: image
+label: 'Color model'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

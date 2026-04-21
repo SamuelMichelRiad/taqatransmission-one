@@ -1,0 +1,34 @@
+uuid: 933b4503-1a50-49f8-87cd-fb53366b4f11
+langcode: en
+status: false
+dependencies:
+  config:
+    - views.view.media_center
+  module:
+    - configurable_views_filter_block
+    - system
+  theme:
+    - olivero
+id: olivero_exposedformmedia_centerpage_1_2
+theme: olivero
+region: content
+weight: -7
+provider: null
+plugin: 'configurable_views_filter_block_block:media_center-page_1'
+settings:
+  id: 'configurable_views_filter_block_block:media_center-page_1'
+  label: ''
+  label_display: '0'
+  provider: configurable_views_filter_block
+  views_label: ''
+  visible_filters:
+    keywords: keywords
+  no_groups: false
+  no_reset: false
+  no_sort: false
+  no_pager: false
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /media-hub

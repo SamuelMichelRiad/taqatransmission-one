@@ -1,0 +1,9 @@
+uuid: e53ba575-ce2f-46ad-9f57-5f386a1a0a21
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media license'
+vid: media_license
+description: null
+weight: 0
+new_revision: false

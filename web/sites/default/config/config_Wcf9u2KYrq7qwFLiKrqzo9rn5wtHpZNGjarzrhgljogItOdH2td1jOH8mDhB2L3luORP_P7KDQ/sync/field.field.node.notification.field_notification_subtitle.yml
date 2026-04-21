@@ -1,0 +1,19 @@
+uuid: fad7857b-a17a-4437-8a82-092eb2426377
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_notification_subtitle
+    - node.type.notification
+id: node.notification.field_notification_subtitle
+field_name: field_notification_subtitle
+entity_type: node
+bundle: notification
+label: Subtitle
+description: 'The description of this notification which will be displayed to the user on their phone'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

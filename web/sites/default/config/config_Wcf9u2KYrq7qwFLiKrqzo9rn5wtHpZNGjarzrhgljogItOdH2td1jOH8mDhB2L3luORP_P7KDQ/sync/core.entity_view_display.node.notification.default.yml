@@ -1,0 +1,59 @@
+uuid: 0c21ff59-24a2-47e8-b3e9-ebd719bc280a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.notification.field_notification_body
+    - field.field.node.notification.field_notification_end_date
+    - field.field.node.notification.field_notification_start_date
+    - field.field.node.notification.field_notification_subtitle
+    - node.type.notification
+  module:
+    - datetime
+    - text
+    - user
+id: node.notification.default
+targetEntityType: node
+bundle: notification
+mode: default
+content:
+  field_notification_body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_notification_end_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_notification_start_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_notification_subtitle:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  search_api_excerpt: true

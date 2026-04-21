@@ -1,0 +1,16 @@
+uuid: 00fccfb0-1b9d-4c3c-9d20-19ab91379229
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.notification
+  module:
+    - node
+id: notification_manager
+label: 'Notification manager'
+weight: 4
+is_admin: false
+permissions:
+  - 'create notification content'
+  - 'delete any notification content'
+  - 'edit any notification content'

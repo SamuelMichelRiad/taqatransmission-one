@@ -3,23 +3,13 @@
 namespace Drupal\media_hub\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class MediaHubController extends ControllerBase {
 
-  public function __construct(
-    protected EntityTypeManagerInterface $entityTypeManager,
-  ) {}
-
-  public static function create(ContainerInterface $container): static {
-    return new static($container->get('entity_type.manager'));
-  }
-
   public function related(int $media_id): JsonResponse {
-    $storage = $this->entityTypeManager->getStorage('media');
+    $storage = $this->entityTypeManager()->getStorage('media');
     $media = $storage->load($media_id);
 
     if (!$media) {

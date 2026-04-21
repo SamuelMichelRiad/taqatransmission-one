@@ -1,0 +1,23 @@
+uuid: 7225943f-9982-4625-a6a6-7cf2fc3a280a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_image_resolution
+    - media.type.image
+id: media.image.field_image_resolution
+field_name: field_image_resolution
+entity_type: media
+bundle: image
+label: Resolution
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: dpi
+field_type: integer

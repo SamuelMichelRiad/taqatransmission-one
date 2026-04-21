@@ -1,0 +1,9 @@
+uuid: b8a717aa-76bc-4ffa-aca5-18873cefe95d
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media graphical element'
+vid: media_graphical_element
+description: null
+weight: 0
+new_revision: false

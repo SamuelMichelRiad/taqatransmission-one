@@ -1,0 +1,9 @@
+uuid: 12cc8d8f-50d4-4475-a99e-c2adc315208f
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media asset type'
+vid: media_asset_type
+description: null
+weight: 0
+new_revision: false

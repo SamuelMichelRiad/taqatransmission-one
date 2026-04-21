@@ -1,0 +1,9 @@
+uuid: 7619d0cd-1a47-4dd9-97da-ba9e7ae85a64
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media publication'
+vid: media_publication
+description: null
+weight: 0
+new_revision: false

@@ -1,0 +1,21 @@
+uuid: e4055933-7eb9-4e00-8455-fad83aad94ee
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_watermarked
+    - media.type.image
+id: media.image.field_media_watermarked
+field_name: field_media_watermarked
+entity_type: media
+bundle: image
+label: Watermarked
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

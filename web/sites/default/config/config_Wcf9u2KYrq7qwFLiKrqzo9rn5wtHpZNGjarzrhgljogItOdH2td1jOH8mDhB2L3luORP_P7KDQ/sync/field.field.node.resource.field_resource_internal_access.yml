@@ -1,0 +1,21 @@
+uuid: aa7c807b-ba5a-4fef-b60f-46cc945e7b0c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_resource_internal_access
+    - node.type.resource
+id: node.resource.field_resource_internal_access
+field_name: field_resource_internal_access
+entity_type: node
+bundle: resource
+label: 'Internal access'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,29 @@
+uuid: 07e703db-b95f-44b8-9ce0-d2043986a0e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_image_graphical_element
+    - media.type.image
+    - taxonomy.vocabulary.media_graphical_element
+id: media.image.field_image_graphical_element
+field_name: field_image_graphical_element
+entity_type: media
+bundle: image
+label: 'Graphical element'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      media_graphical_element: media_graphical_element
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

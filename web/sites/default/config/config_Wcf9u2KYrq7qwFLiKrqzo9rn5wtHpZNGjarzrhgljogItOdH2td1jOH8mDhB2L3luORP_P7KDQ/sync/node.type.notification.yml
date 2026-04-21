@@ -1,0 +1,18 @@
+uuid: 3fa13cd6-4f66-436f-89eb-54de960a49ec
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Notification
+type: notification
+description: null
+help: null
+new_revision: false
+preview_mode: 0
+display_submitted: true

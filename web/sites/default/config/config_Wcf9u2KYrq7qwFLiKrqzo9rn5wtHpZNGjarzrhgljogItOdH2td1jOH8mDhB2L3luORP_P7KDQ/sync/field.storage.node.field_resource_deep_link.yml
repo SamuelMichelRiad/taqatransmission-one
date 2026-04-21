@@ -1,0 +1,21 @@
+uuid: 1231fb2d-57ff-4ea4-a6cd-e8cf4e33711d
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_resource_deep_link
+field_name: field_resource_deep_link
+entity_type: node
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

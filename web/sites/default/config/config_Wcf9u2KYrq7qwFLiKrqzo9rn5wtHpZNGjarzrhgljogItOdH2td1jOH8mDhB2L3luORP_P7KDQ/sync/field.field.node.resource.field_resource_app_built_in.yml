@@ -1,0 +1,21 @@
+uuid: 9b923541-0adb-4990-ab94-09c494e9e374
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_resource_app_built_in
+    - node.type.resource
+id: node.resource.field_resource_app_built_in
+field_name: field_resource_app_built_in
+entity_type: node
+bundle: resource
+label: 'App built-in service'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

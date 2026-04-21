@@ -1,0 +1,9 @@
+uuid: c700b36b-b725-4632-b06f-21f0d40b63b0
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media people featured'
+vid: media_people_featured
+description: null
+weight: 0
+new_revision: false

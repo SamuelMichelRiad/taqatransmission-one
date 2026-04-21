@@ -1,0 +1,68 @@
+uuid: 81816b48-adbe-48d3-b93a-f0feeb36c1e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.media.media_library
+    - field.field.media.image.field_image_color_model
+    - field.field.media.image.field_image_graphical_element
+    - field.field.media.image.field_image_height
+    - field.field.media.image.field_image_orientation
+    - field.field.media.image.field_image_resolution
+    - field.field.media.image.field_image_width
+    - field.field.media.image.field_media_asset_type
+    - field.field.media.image.field_media_caption
+    - field.field.media.image.field_media_category
+    - field.field.media.image.field_media_image
+    - field.field.media.image.field_media_license
+    - field.field.media.image.field_media_location
+    - field.field.media.image.field_media_people_featured
+    - field.field.media.image.field_media_publication
+    - field.field.media.image.field_media_site
+    - field.field.media.image.field_media_solution_segment
+    - field.field.media.image.field_media_tags
+    - field.field.media.image.field_media_theme
+    - field.field.media.image.field_media_watermarked
+    - image.style.thumbnail
+    - media.type.image
+  module:
+    - image
+_core:
+  default_config_hash: BMLrK4zKp8-FFnMseBdT_6h6YipUsKRfbDf_3WUB5HA
+id: media.image.media_library
+targetEntityType: media
+bundle: image
+mode: media_library
+content:
+  field_media_image:
+    type: image_image
+    weight: 1
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_image_color_model: true
+  field_image_graphical_element: true
+  field_image_height: true
+  field_image_orientation: true
+  field_image_resolution: true
+  field_image_width: true
+  field_media_asset_type: true
+  field_media_caption: true
+  field_media_category: true
+  field_media_license: true
+  field_media_location: true
+  field_media_people_featured: true
+  field_media_publication: true
+  field_media_site: true
+  field_media_solution_segment: true
+  field_media_tags: true
+  field_media_theme: true
+  field_media_watermarked: true
+  name: true
+  path: true
+  status: true
+  uid: true

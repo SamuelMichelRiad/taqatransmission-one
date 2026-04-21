@@ -1,0 +1,9 @@
+uuid: 17e2fe74-9ea8-448b-8761-0a887bd2dd47
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media solution segment'
+vid: media_solution_segment
+description: null
+weight: 0
+new_revision: false

@@ -1,0 +1,9 @@
+uuid: 13281070-37a2-4dd5-bde2-538cf7a01ff2
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media location'
+vid: media_location
+description: null
+weight: 0
+new_revision: false

@@ -1,0 +1,9 @@
+uuid: b6230bd3-bc4a-4f54-a422-20cfe7c94c89
+langcode: en
+status: true
+dependencies: {  }
+name: 'Media site'
+vid: media_site
+description: null
+weight: 0
+new_revision: false

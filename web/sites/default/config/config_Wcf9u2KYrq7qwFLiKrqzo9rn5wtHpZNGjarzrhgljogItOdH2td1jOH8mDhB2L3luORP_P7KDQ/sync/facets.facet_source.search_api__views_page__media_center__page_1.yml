@@ -1,0 +1,12 @@
+uuid: 72efc514-6794-46ed-8ec8-6d6d56db775f
+langcode: en
+status: true
+dependencies: {  }
+id: search_api__views_page__media_center__page_1
+name: 'search_api:views_page__media_center__page_1'
+filter_key: ''
+url_processor: query_string
+breadcrumb:
+  active: false
+  before: true
+  group: false

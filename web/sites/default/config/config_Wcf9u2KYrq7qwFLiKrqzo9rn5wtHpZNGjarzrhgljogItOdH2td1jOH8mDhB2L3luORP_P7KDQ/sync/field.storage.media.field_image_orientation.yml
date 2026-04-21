@@ -1,0 +1,30 @@
+uuid: 0db71509-4db0-440b-91e0-df55c7c749e3
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - options
+id: media.field_image_orientation
+field_name: field_image_orientation
+entity_type: media
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: landscape
+      label: Landscape
+    -
+      value: portrait
+      label: Portrait
+    -
+      value: square
+      label: Square
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
