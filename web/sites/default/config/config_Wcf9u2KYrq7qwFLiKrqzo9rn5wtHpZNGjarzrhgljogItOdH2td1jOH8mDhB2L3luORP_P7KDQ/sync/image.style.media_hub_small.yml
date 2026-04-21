@@ -1,0 +1,21 @@
+uuid: 5d79841b-0721-435a-a8a9-30810b028d3e
+langcode: en
+status: true
+dependencies: {  }
+name: media_hub_small
+label: 'Media Hub small (180×180)'
+effects:
+  a1b2c3d4-0001-0001-0001-000000000001:
+    uuid: a1b2c3d4-0001-0001-0001-000000000001
+    id: image_scale_and_crop
+    weight: 0
+    data:
+      width: 180
+      height: 180
+      anchor: center-center
+  a1b2c3d4-0001-0001-0001-000000000002:
+    uuid: a1b2c3d4-0001-0001-0001-000000000002
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

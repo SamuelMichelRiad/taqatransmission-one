@@ -1,0 +1,21 @@
+uuid: b7cda6af-01b8-499c-abb5-b47c027dacd6
+langcode: en
+status: true
+dependencies: {  }
+name: media_hub_large
+label: 'Media Hub large (280×280)'
+effects:
+  c3d4e5f6-0003-0003-0003-000000000001:
+    uuid: c3d4e5f6-0003-0003-0003-000000000001
+    id: image_scale_and_crop
+    weight: 0
+    data:
+      width: 280
+      height: 280
+      anchor: center-center
+  c3d4e5f6-0003-0003-0003-000000000002:
+    uuid: c3d4e5f6-0003-0003-0003-000000000002
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

@@ -1,0 +1,21 @@
+uuid: 2ef598a8-1983-4c34-ad32-9a4c7ac320b1
+langcode: en
+status: true
+dependencies: {  }
+name: media_hub_medium
+label: 'Media Hub medium (220×220)'
+effects:
+  b2c3d4e5-0002-0002-0002-000000000001:
+    uuid: b2c3d4e5-0002-0002-0002-000000000001
+    id: image_scale_and_crop
+    weight: 0
+    data:
+      width: 220
+      height: 220
+      anchor: center-center
+  b2c3d4e5-0002-0002-0002-000000000002:
+    uuid: b2c3d4e5-0002-0002-0002-000000000002
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp
