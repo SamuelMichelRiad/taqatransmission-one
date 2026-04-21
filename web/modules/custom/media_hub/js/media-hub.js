@@ -423,7 +423,7 @@
   // ── Sidebar clone for lightbox ──────────────────────────────
 
   function cloneSidebarToLightbox() {
-    const mainSidebar = document.getElementById('media-hub-sidebar');
+    const mainSidebar = document.getElementById('block-olivero-exposedformmedia-centerpage-1');
     const lbSidebar = document.getElementById('lightbox-sidebar-filters');
     if (!mainSidebar || !lbSidebar) return;
 
@@ -475,7 +475,7 @@
       buildChips();
       initHeroSearch();
 
-      const sidebar = document.getElementById('media-hub-sidebar');
+      const sidebar = document.getElementById('block-olivero-exposedformmedia-centerpage-1');
       wrapFilterGroups(sidebar);
 
       // Card click/keyboard → open lightbox

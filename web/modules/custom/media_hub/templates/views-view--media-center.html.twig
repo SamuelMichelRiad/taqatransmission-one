@@ -37,34 +37,26 @@
     </div>
   </div>
 
-  {# Gallery + Sidebar #}
-  <div class="media-hub-body">
-    <div class="media-hub-gallery">
-      <div class="media-hub-gallery__header">
-        <h2 class="media-hub-section-title">{{ 'Gallery'|t }}</h2>
-        {% if header %}
-          <div class="media-hub-result-count">{{ header }}</div>
-        {% endif %}
-      </div>
-
-      {# Active filter chips — populated by JS from URL params #}
-      <div class="media-hub-chips" id="media-hub-chips" aria-label="{{ 'Active filters'|t }}"></div>
-
-      {% if rows %}
-        <div class="media-hub-grid">{{ rows }}</div>
-      {% elseif empty %}
-        <div class="media-hub-empty">{{ empty }}</div>
-      {% endif %}
-
-      {% if pager %}
-        <div class="media-hub-pager">{{ pager }}</div>
+  {# Gallery — sidebar rendered by Olivero's region--sidebar block #}
+  <div class="media-hub-gallery">
+    <div class="media-hub-gallery__header">
+      <h2 class="media-hub-section-title">{{ 'Gallery'|t }}</h2>
+      {% if header %}
+        <div class="media-hub-result-count">{{ header }}</div>
       {% endif %}
     </div>
 
-    {% if exposed %}
-      <aside class="media-hub-sidebar" id="media-hub-sidebar">
-        {{ exposed }}
-      </aside>
+    {# Active filter chips — populated by JS from URL params #}
+    <div class="media-hub-chips" id="media-hub-chips" aria-label="{{ 'Active filters'|t }}"></div>
+
+    {% if rows %}
+      <div class="media-hub-grid">{{ rows }}</div>
+    {% elseif empty %}
+      <div class="media-hub-empty">{{ empty }}</div>
+    {% endif %}
+
+    {% if pager %}
+      <div class="media-hub-pager">{{ pager }}</div>
     {% endif %}
   </div>
 </div>

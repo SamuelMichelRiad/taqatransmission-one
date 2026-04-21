@@ -154,13 +154,7 @@
   padding: 8px;
 }
 
-/* ── Body layout ───────────────────────────────────────────── */
-.media-hub-body {
-  display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: 24px;
-  align-items: start;
-}
+/* ── Body layout — gallery uses full content region; sidebar is Olivero's region--sidebar ── */
 
 /* ── Gallery ───────────────────────────────────────────────── */
 .media-hub-gallery__header {
@@ -209,31 +203,26 @@
 }
 
 /* ── Grid ──────────────────────────────────────────────────── */
-/* Views grid style renders: .views-view-grid > .views-row > .views-col */
-.media-hub-grid .views-view-grid {
-  display: block;
+/* Drupal 10+ Views grid renders .views-view-grid--horizontal with
+   --views-grid--column-count CSS custom property and display:grid */
+.media-hub-grid .views-view-grid--horizontal {
+  gap: 8px !important;
+  --views-grid--column-count: 6;
   width: 100%;
 }
 
-.media-hub-grid .views-row {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.media-hub-grid .views-col {
+.media-hub-grid .views-view-grid__item,
+.media-hub-grid .views-view-grid__item-inner {
   padding: 0 !important;
   min-width: 0;
 }
 
 @media (max-width: 1200px) {
-  .media-hub-grid .views-row { grid-template-columns: repeat(4, 1fr); }
+  .media-hub-grid .views-view-grid--horizontal { --views-grid--column-count: 4; }
 }
 
 @media (max-width: 768px) {
-  .media-hub-body { grid-template-columns: 1fr; }
-  .media-hub-grid .views-row { grid-template-columns: repeat(2, 1fr); }
+  .media-hub-grid .views-view-grid--horizontal { --views-grid--column-count: 2; }
   .media-hub-quick-access__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
@@ -369,19 +358,19 @@
   color: var(--mh-white);
 }
 
-/* ── Sidebar ────────────────────────────────────────────────── */
-.media-hub-sidebar {
+/* ── Sidebar — targets the Olivero exposed-filter block ─────── */
+#block-olivero-exposedformmedia-centerpage-1 {
   position: sticky;
   top: 16px;
 }
 
-.media-hub-sidebar .views-exposed-form {
+#block-olivero-exposedformmedia-centerpage-1 .views-exposed-form {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.media-hub-sidebar label {
+#block-olivero-exposedformmedia-centerpage-1 label {
   font-family: var(--mh-font-body);
   font-size: 0.8rem;
   color: #333;
