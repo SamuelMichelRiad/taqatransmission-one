@@ -1,0 +1,103 @@
+{# web/modules/custom/media_hub/templates/views-view--media-center.html.twig #}
+{{ attach_library('media_hub/media_hub') }}
+
+<div class="media-hub-page">
+
+  {# Hero Banner #}
+  <div class="media-hub-hero">
+    <div class="media-hub-hero__content">
+      <h1 class="media-hub-hero__title">{{ 'MEDIA HUB'|t }}</h1>
+      <div class="media-hub-hero__search">
+        <span class="media-hub-hero__search-icon" aria-hidden="true">&#128269;</span>
+        <input
+          type="text"
+          class="media-hub-hero__search-input"
+          placeholder="{{ 'Search media...'|t }}"
+          id="media-hub-hero-search"
+          autocomplete="off"
+        >
+      </div>
+    </div>
+  </div>
+
+  {# Quick Access #}
+  <div class="media-hub-quick-access">
+    <h2 class="media-hub-section-title">{{ 'Quick Access'|t }}</h2>
+    <div class="media-hub-quick-access__grid">
+      {% set categories = [
+        { label: 'ASSETS'|t,  filter: 'Assets',  class: 'assets'  },
+        { label: 'EVENTS'|t,  filter: 'Events',  class: 'events'  },
+        { label: 'PEOPLE'|t,  filter: 'People',  class: 'people'  },
+        { label: 'VIDEOS'|t,  filter: 'Videos',  class: 'videos'  },
+      ] %}
+      {% for cat in categories %}
+        <a href="{{ path('view.media_center.page_1') }}?f[0]=category:{{ cat.filter }}"
+           class="media-hub-qa-card media-hub-qa-card--{{ cat.class }}">
+          <span class="media-hub-qa-card__label">{{ cat.label }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  {# Gallery + Sidebar #}
+  <div class="media-hub-body">
+    <div class="media-hub-gallery">
+      <div class="media-hub-gallery__header">
+        <h2 class="media-hub-section-title">{{ 'Gallery'|t }}</h2>
+        {% if header %}
+          <div class="media-hub-result-count">{{ header }}</div>
+        {% endif %}
+      </div>
+
+      {# Active filter chips — populated by JS from URL params #}
+      <div class="media-hub-chips" id="media-hub-chips" aria-label="{{ 'Active filters'|t }}"></div>
+
+      {% if rows %}
+        <div class="media-hub-grid">{{ rows }}</div>
+      {% elseif empty %}
+        <div class="media-hub-empty">{{ empty }}</div>
+      {% endif %}
+
+      {% if pager %}
+        <div class="media-hub-pager">{{ pager }}</div>
+      {% endif %}
+    </div>
+
+    {% if exposed %}
+      <aside class="media-hub-sidebar" id="media-hub-sidebar">
+        {{ exposed }}
+      </aside>
+    {% endif %}
+  </div>
+</div>
+
+{# Lightbox overlay — populated and shown by JS #}
+<div class="media-hub-lightbox" id="media-hub-lightbox" role="dialog" aria-modal="true" aria-label="{{ 'Media preview'|t }}" hidden>
+  <div class="media-hub-lightbox__inner">
+    <div class="media-hub-lightbox__main">
+      <button class="media-hub-lightbox__close" id="media-hub-lightbox-close" aria-label="{{ 'Close'|t }}">
+        {{ 'CLOSE'|t }} <span aria-hidden="true">&#10005;</span>
+      </button>
+      <div class="media-hub-lightbox__stage" id="media-hub-lightbox-stage">
+        <button class="media-hub-lightbox__nav media-hub-lightbox__nav--prev" id="lightbox-prev" aria-label="{{ 'Previous'|t }}">&#8249;</button>
+        <div class="media-hub-lightbox__media" id="lightbox-media"></div>
+        <button class="media-hub-lightbox__nav media-hub-lightbox__nav--next" id="lightbox-next" aria-label="{{ 'Next'|t }}">&#8250;</button>
+      </div>
+      <div class="media-hub-lightbox__caption-bar" id="lightbox-caption-bar">
+        <span class="media-hub-lightbox__caption" id="lightbox-caption"></span>
+        <a class="media-hub-lightbox__download" id="lightbox-download" download>{{ 'Download'|t }} &#8595;</a>
+      </div>
+      <div class="media-hub-lightbox__related" id="lightbox-related">
+        <div class="media-hub-section-title media-hub-section-title--small">{{ 'Related Images'|t }}</div>
+        <div class="media-hub-lightbox__related-thumbs" id="lightbox-related-thumbs"></div>
+      </div>
+    </div>
+    <aside class="media-hub-lightbox__sidebar">
+      <div class="media-hub-lightbox__sidebar-search">
+        <span aria-hidden="true">&#128269;</span>
+        <input type="text" id="lightbox-sidebar-search" placeholder="{{ 'Search media...'|t }}">
+      </div>
+      <div id="lightbox-sidebar-filters"></div>
+    </aside>
+  </div>
+</div>
