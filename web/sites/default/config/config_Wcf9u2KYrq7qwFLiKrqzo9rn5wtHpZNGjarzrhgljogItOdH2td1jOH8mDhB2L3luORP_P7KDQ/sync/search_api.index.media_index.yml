@@ -1,0 +1,158 @@
+uuid: e024f8e8-250d-4020-a62f-4baa9e25422a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_asset_type
+    - field.storage.media.field_media_caption
+    - field.storage.media.field_media_category
+    - field.storage.media.field_media_license
+    - field.storage.media.field_media_location
+    - field.storage.media.field_media_people_featured
+    - field.storage.media.field_media_solution_segment
+    - field.storage.media.field_media_tags
+    - field.storage.media.field_media_theme
+    - search_api.server.db_server
+  module:
+    - media
+id: media_index
+name: 'Media index'
+description: ''
+read_only: false
+field_settings:
+  bundle:
+    label: 'Media type'
+    datasource_id: 'entity:media'
+    property_path: bundle
+    type: string
+    dependencies:
+      module:
+        - media
+  created:
+    label: 'Authored on'
+    datasource_id: 'entity:media'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - media
+  field_media_asset_type:
+    label: 'Asset type'
+    datasource_id: 'entity:media'
+    property_path: field_media_asset_type
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_asset_type
+  field_media_caption:
+    label: Caption
+    datasource_id: 'entity:media'
+    property_path: field_media_caption
+    type: text
+    dependencies:
+      config:
+        - field.storage.media.field_media_caption
+  field_media_category:
+    label: Category
+    datasource_id: 'entity:media'
+    property_path: field_media_category
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_category
+  field_media_license:
+    label: License
+    datasource_id: 'entity:media'
+    property_path: field_media_license
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_license
+  field_media_location:
+    label: Location
+    datasource_id: 'entity:media'
+    property_path: field_media_location
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_location
+  field_media_people_featured:
+    label: 'People featured'
+    datasource_id: 'entity:media'
+    property_path: field_media_people_featured
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_people_featured
+  field_media_solution_segment:
+    label: 'Solution segment'
+    datasource_id: 'entity:media'
+    property_path: field_media_solution_segment
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_solution_segment
+  field_media_tags:
+    label: Tags
+    datasource_id: 'entity:media'
+    property_path: field_media_tags
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_tags
+  field_media_theme:
+    label: Theme
+    datasource_id: 'entity:media'
+    property_path: field_media_theme
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.field_media_theme
+  langcode:
+    label: Language
+    datasource_id: 'entity:media'
+    property_path: langcode
+    type: string
+    dependencies:
+      module:
+        - media
+  name:
+    label: Name
+    datasource_id: 'entity:media'
+    property_path: name
+    type: string
+    dependencies:
+      module:
+        - media
+  status:
+    label: Published
+    datasource_id: 'entity:media'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - media
+datasource_settings:
+  'entity:media':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  custom_value: {  }
+  entity_type: {  }
+  language_with_fallback: {  }
+  rendered_item: {  }
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  cron_limit: 50
+  delete_on_fail: true
+  index_directly: true
+  track_changes_in_references: true
+server: db_server
