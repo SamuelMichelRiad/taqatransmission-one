@@ -1,0 +1,161 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\Entity\User;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
+use Drupal\Core\Database\Database;
+
+function oneservices_node_insert(NodeInterface $node): void {
+  if($node->bundle() == 'notification' || $node->bundle() == 'service') {
+    $url  = 'http://localhost:3000/hooks/refresh/' . $node->bundle().'s';
+    try {
+      \Drupal::httpClient()->post($url, [
+        'timeout'     => 3,
+        'http_errors' => FALSE,
+        'headers'     => ['Content-Type' => 'application/json'],
+        'json'        => (object)[], // empty JSON body
+      ]);
+    } catch (\Throwable $e) {
+      \Drupal::logger('oneservices')->error('Webhook POST failed (@type): @msg', [
+        '@type' => $type,
+        '@msg'  => $e->getMessage(),
+      ]);
+    }
+  }
+}
+
+function oneservices_node_update(NodeInterface $node): void {
+  if($node->bundle() == 'notification' || $node->bundle() == 'service') {
+    /** @var \Drupal\Core\Database\Transaction\TransactionManagerInterface $tm */
+    $tm = \Drupal::service('database.transaction_manager');
+    if ($tm->inTransaction()) {
+      $tm->addPostTransactionCallback(function (bool $success) {
+        $url  = 'http://localhost:3000/hooks/refresh/' . $node->bundle().'s';
+        try {
+          \Drupal::httpClient()->post($url, [
+            'timeout'     => 3,
+            'http_errors' => FALSE,
+            'headers'     => ['Content-Type' => 'application/json'],
+            'json'        => (object)[], // empty JSON body
+          ]);
+        } catch (\Throwable $e) {
+          \Drupal::logger('oneservices')->error('Webhook POST failed (@type): @msg', [
+            '@type' => $type,
+            '@msg'  => $e->getMessage(),
+          ]);
+        }
+      });
+    }
+  }
+}
+
+function oneservices_node_delete(NodeInterface $node): void {
+  if($node->bundle() == 'notification' || $node->bundle() == 'service') {
+    $url  = 'http://localhost:3000/hooks/refresh/' . $node->bundle().'s';
+    try {
+      \Drupal::httpClient()->post($url, [
+        'timeout'     => 3,
+        'http_errors' => FALSE,
+        'headers'     => ['Content-Type' => 'application/json'],
+        'json'        => (object)[], // empty JSON body
+      ]);
+    } catch (\Throwable $e) {
+      \Drupal::logger('oneservices')->error('Webhook POST failed (@type): @msg', [
+        '@type' => $type,
+        '@msg'  => $e->getMessage(),
+      ]);
+    }
+  }
+}
+
+
+function oneservices_taxonomy_term_insert(TermInterface $term): void {
+  // Limit to a vocabulary if needed:
+  if ($term->bundle() === 'category') { 
+    $url  = 'http://localhost:3000/hooks/refresh/categories';
+    try {
+      \Drupal::httpClient()->post($url, [
+        'timeout'     => 3,
+        'http_errors' => FALSE,
+        'headers'     => ['Content-Type' => 'application/json'],
+        'json'        => (object)[], // empty JSON body
+      ]);
+    } catch (\Throwable $e) {
+      \Drupal::logger('oneservices')->error('Webhook POST failed (@type): @msg', [
+        '@type' => $type,
+        '@msg'  => $e->getMessage(),
+      ]);
+    }
+  }
+}
+
+function oneservices_taxonomy_term_update(TermInterface $term): void {
+  // Limit to a vocabulary if needed:
+  if ($term->bundle() === 'category') {
+    $url  = 'http://localhost:3000/hooks/refresh/categories';
+    try {
+      \Drupal::httpClient()->post($url, [
+        'timeout'     => 3,
+        'http_errors' => FALSE,
+        'headers'     => ['Content-Type' => 'application/json'],
+        'json'        => (object)[], // empty JSON body
+      ]);
+    } catch (\Throwable $e) {
+      \Drupal::logger('oneservices')->error('Webhook POST failed (@type): @msg', [
+        '@type' => $type,
+        '@msg'  => $e->getMessage(),
+      ]);
+    }
+  }
+}
+
+
+function oneservices_taxonomy_term_delete(TermInterface $term): void {
+  // Limit to a vocabulary if needed:
+  if ($term->bundle() === 'category') {
+    $url  = 'http://localhost:3000/hooks/refresh/categories';
+    try {
+      \Drupal::httpClient()->post($url, [
+        'timeout'     => 3,
+        'http_errors' => FALSE,
+        'headers'     => ['Content-Type' => 'application/json'],
+        'json'        => (object)[], // empty JSON body
+      ]);
+    } catch (\Throwable $e) {
+      \Drupal::logger('oneservices')->error('Webhook POST failed (@type): @msg', [
+        '@type' => $type,
+        '@msg'  => $e->getMessage(),
+      ]);
+    }
+  }
+}
+
+
+function oneservices_node_view_alter(
+  array &$build,
+  EntityInterface $entity,
+  EntityViewDisplayInterface $display,
+) {
+
+  if($entity->bundle() == 'notification') {
+    $build['#cache']['max-age'] = 0;
+    \Drupal::service('page_cache_kill_switch')->trigger();
+
+    $user = User::load(\Drupal::currentUser()->id());
+    $is_notification_manager = in_array('notification_manager', $user->getRoles());
+    if($is_notification_manager) {
+      $build['send_notification'] = [
+        '#type' => 'link',
+        '#title' => 'Send notification',
+        '#url' => Url::fromRoute(
+          'oneservices.send_notification',
+            ['node' => $entity->id()],
+        ),
+        '#attributes' => [ 'class' => [ 'button', 'button--primary' ] ] 
+      ];
+    } 
+  }
+}

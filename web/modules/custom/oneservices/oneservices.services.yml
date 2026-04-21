@@ -1,0 +1,11 @@
+parameters:
+  oneservices.fcm.project_id: 'oneservices-5fdb2'
+  # Use an environment variable so secrets don’t live in the repo.
+  oneservices.fcm.service_account: '/var/www/private/oneservices-5fdb2-firebase-adminsdk-fbsvc-560afb1dd8.json'
+
+services:
+  oneservices.fcm_broadcaster:
+    class: Drupal\oneservices\Service\FcmBroadcaster
+    arguments:
+      - '%oneservices.fcm.project_id%'
+      - '%oneservices.fcm.service_account%'

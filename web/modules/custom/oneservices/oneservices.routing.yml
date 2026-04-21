@@ -1,0 +1,12 @@
+oneservices.send_notification:
+  path: '/notification/{node}/send'
+  defaults:
+    _form: '\Drupal\oneservices\Form\SendNotificationConfirmForm'
+    _title: 'Send notification'
+  requirements:
+    _role: 'notification_manager'
+  options:
+    parameters:
+      node:
+        type: entity:node
+  methods: [GET, POST]

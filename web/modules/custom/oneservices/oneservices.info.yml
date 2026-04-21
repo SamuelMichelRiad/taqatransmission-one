@@ -1,0 +1,5 @@
+name: OneServices
+type: module
+description: Various functions to facilitate the operation of the OneServices mobile app
+core_version_requirement: ^11
+package: TAQA Transmission

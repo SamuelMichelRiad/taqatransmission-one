@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignoreWords": [
+    "Bustos",
+    "Holovachek",
+    "Renderable",
+    "Viktor",
+    "awolfey",
+    "endfor",
+    "hoverintent",
+    "ibustos",
+    "langcode",
+    "nonroot",
+    "paramconverter",
+    "preprocess",
+    "tigger"
+  ]
+}
