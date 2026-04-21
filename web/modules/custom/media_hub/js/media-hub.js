@@ -1,7 +1,7 @@
 // web/modules/custom/media_hub/js/media-hub.js
-/* global Drupal, drupalSettings */
+/* global Drupal, drupalSettings, once */
 
-(function (Drupal) {
+(function (Drupal, once) {
   'use strict';
 
   // ── Constants ──────────────────────────────────────────────
@@ -31,6 +31,7 @@
 
   let cardIndex = [];
   let lightboxPos = 0;
+  let savedScrollY = 0;
 
   // ── Utilities ──────────────────────────────────────────────
 
@@ -233,6 +234,7 @@
     const lb = document.getElementById('media-hub-lightbox');
     if (!lb || !cardIndex[position]) return;
 
+    savedScrollY = window.scrollY;
     lightboxPos = position;
     lb.removeAttribute('hidden');
     document.body.style.overflow = 'hidden';
@@ -246,6 +248,7 @@
     if (!lb) return;
     lb.setAttribute('hidden', '');
     document.body.style.overflow = '';
+    window.scrollTo(0, savedScrollY);
 
     // Stop any playing video/audio
     const mediaEl = document.getElementById('lightbox-media');
@@ -476,7 +479,8 @@
       wrapFilterGroups(sidebar);
 
       // Card click/keyboard → open lightbox
-      cardIndex.forEach(function (card, i) {
+      once('mh-card-click', '.media-hub-card', context).forEach(function (card) {
+        const i = cardIndex.indexOf(card);
         card.addEventListener('click', function () { openLightbox(i); });
         card.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -486,28 +490,29 @@
         });
       });
 
-      // Lightbox close
-      const lbClose = document.getElementById('media-hub-lightbox-close');
-      if (lbClose) lbClose.addEventListener('click', closeLightbox);
-
-      // Lightbox nav arrows
-      const lbPrev = document.getElementById('lightbox-prev');
-      if (lbPrev) lbPrev.addEventListener('click', function () {
-        if (lightboxPos > 0) openLightbox(lightboxPos - 1);
+      // Lightbox controls (close/prev/next)
+      once('mh-lightbox-controls', '#media-hub-lightbox', context).forEach(function () {
+        const lbClose = document.getElementById('media-hub-lightbox-close');
+        if (lbClose) lbClose.addEventListener('click', closeLightbox);
+        const lbPrev = document.getElementById('lightbox-prev');
+        if (lbPrev) lbPrev.addEventListener('click', function () {
+          if (lightboxPos > 0) openLightbox(lightboxPos - 1);
+        });
+        const lbNext = document.getElementById('lightbox-next');
+        if (lbNext) lbNext.addEventListener('click', function () {
+          if (lightboxPos < cardIndex.length - 1) openLightbox(lightboxPos + 1);
+        });
       });
 
-      const lbNext = document.getElementById('lightbox-next');
-      if (lbNext) lbNext.addEventListener('click', function () {
-        if (lightboxPos < cardIndex.length - 1) openLightbox(lightboxPos + 1);
-      });
-
-      // Keyboard shortcuts
-      document.addEventListener('keydown', function (e) {
-        const lb = document.getElementById('media-hub-lightbox');
-        if (!lb || lb.hasAttribute('hidden')) return;
-        if (e.key === 'Escape') closeLightbox();
-        if (e.key === 'ArrowLeft' && lightboxPos > 0) openLightbox(lightboxPos - 1);
-        if (e.key === 'ArrowRight' && lightboxPos < cardIndex.length - 1) openLightbox(lightboxPos + 1);
+      // Keyboard shortcuts — guard against multiple registrations on AJAX re-attach
+      once('mh-keyboard', document).forEach(function () {
+        document.addEventListener('keydown', function (e) {
+          const lb = document.getElementById('media-hub-lightbox');
+          if (!lb || lb.hasAttribute('hidden')) return;
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowLeft' && lightboxPos > 0) openLightbox(lightboxPos - 1);
+          if (e.key === 'ArrowRight' && lightboxPos < cardIndex.length - 1) openLightbox(lightboxPos + 1);
+        });
       });
 
       // Clone sidebar into lightbox and init its search
@@ -516,4 +521,4 @@
     }
   };
 
-})(Drupal);
+})(Drupal, once);

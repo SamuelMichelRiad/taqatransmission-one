@@ -1,11 +1,19 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\media_hub\Controller\MediaHubController.
+ */
+
 namespace Drupal\media_hub\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Controller for the Media Hub related images JSON endpoint.
+ */
 class MediaHubController extends ControllerBase {
 
   public function related(int $media_id): JsonResponse {
@@ -16,8 +24,8 @@ class MediaHubController extends ControllerBase {
       return new JsonResponse([], Response::HTTP_NOT_FOUND);
     }
 
-    $category_ids = array_column($media->get('field_media_category')->getValue(), 'target_id');
-    $tag_ids = array_column($media->get('field_media_tags')->getValue(), 'target_id');
+    $category_ids = $media->hasField('field_media_category') ? array_column($media->get('field_media_category')->getValue(), 'target_id') : [];
+    $tag_ids = $media->hasField('field_media_tags') ? array_column($media->get('field_media_tags')->getValue(), 'target_id') : [];
 
     $primary_ids = [];
     if (!empty($category_ids) && !empty($tag_ids)) {
@@ -45,6 +53,8 @@ class MediaHubController extends ControllerBase {
     $selected_ids = static::selectRelated($primary_ids, $fallback_ids, 3);
     $items = $storage->loadMultiple($selected_ids);
 
+    $url_generator = $this->container->get('file_url_generator');
+
     $result = [];
     foreach ($selected_ids as $id) {
       if (empty($items[$id])) {
@@ -56,7 +66,7 @@ class MediaHubController extends ControllerBase {
         $thumb_item = $item->get('thumbnail')->first();
         $file = $thumb_item->entity;
         if ($file) {
-          $thumbnail = \Drupal::service('file_url_generator')->generateAbsoluteString($file->getFileUri());
+          $thumbnail = $url_generator->generateAbsoluteString($file->getFileUri());
         }
       }
       $result[] = [

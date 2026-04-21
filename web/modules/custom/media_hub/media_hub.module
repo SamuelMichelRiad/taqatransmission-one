@@ -7,13 +7,6 @@
 use Drupal\media\MediaInterface;
 
 /**
- * Implements hook_theme().
- */
-function media_hub_theme(): array {
-  return [];
-}
-
-/**
  * Implements hook_theme_suggestions_alter().
  *
  * Provide specific template suggestions for the media_center view.
