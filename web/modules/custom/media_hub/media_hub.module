@@ -5,8 +5,6 @@
  * Media Hub module hooks.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
-
 /**
  * Implements hook_theme().
  */
