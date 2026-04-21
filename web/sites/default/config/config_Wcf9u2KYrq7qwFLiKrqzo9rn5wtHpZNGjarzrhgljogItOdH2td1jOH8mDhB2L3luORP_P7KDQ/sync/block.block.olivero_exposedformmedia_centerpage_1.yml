@@ -1,0 +1,43 @@
+uuid: ee8b2cbc-d606-4647-b242-89e12fefb3b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.media_center
+  module:
+    - configurable_views_filter_block
+    - system
+  theme:
+    - olivero
+id: olivero_exposedformmedia_centerpage_1
+theme: olivero
+region: sidebar
+weight: 0
+provider: null
+plugin: 'configurable_views_filter_block_block:media_center-page_1'
+settings:
+  id: 'configurable_views_filter_block_block:media_center-page_1'
+  label: ''
+  label_display: '0'
+  provider: configurable_views_filter_block
+  views_label: ''
+  visible_filters:
+    keywords: keywords
+    category: category
+    license: license
+    type: type
+    tags: tags
+    location: location
+    theme: theme
+    asset_type: asset_type
+    solution_segment: solution_segment
+    people_featured: people_featured
+  no_groups: false
+  no_reset: false
+  no_sort: false
+  no_pager: false
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: /media-hub
