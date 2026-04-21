@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Media Hub module hooks.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function media_hub_theme(): array {
+  return [];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function media_hub_page_attachments(array &$attachments): void {
+  $route = \Drupal::routeMatch()->getRouteName();
+  if ($route === 'view.media_center.page_1') {
+    $attachments['#attached']['library'][] = 'media_hub/media_hub';
+  }
+}

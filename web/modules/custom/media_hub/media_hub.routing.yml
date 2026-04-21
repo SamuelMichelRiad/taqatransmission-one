@@ -1,0 +1,9 @@
+media_hub.related:
+  path: '/media-hub/related/{media_id}'
+  defaults:
+    _controller: '\Drupal\media_hub\Controller\MediaHubController::related'
+    _title: 'Related Media'
+  requirements:
+    _permission: 'access content'
+    media_id: '\d+'
+  methods: [GET]

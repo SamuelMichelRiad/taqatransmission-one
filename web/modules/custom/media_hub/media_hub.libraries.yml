@@ -1,0 +1,11 @@
+media_hub:
+  version: 1.0
+  css:
+    theme:
+      css/media-hub.css: {}
+  js:
+    js/media-hub.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once

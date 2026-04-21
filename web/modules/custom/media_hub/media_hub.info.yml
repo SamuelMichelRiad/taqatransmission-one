@@ -1,0 +1,12 @@
+name: 'Media Hub'
+type: module
+description: 'Redesigned Media Hub page with hero, quick access, collapsible filters, lightbox, and responsive images.'
+package: Custom
+core_version_requirement: ^11
+dependencies:
+  - drupal:media
+  - drupal:views
+  - drupal:search_api
+  - drupal:responsive_image
+  - better_exposed_filters:better_exposed_filters
+  - facets:facets_exposed_filters
