@@ -7,6 +7,20 @@
 use Drupal\media\MediaInterface;
 
 /**
+ * Implements hook_theme().
+ */
+function media_hub_theme(): array {
+  return [
+    'views_view__media_center' => [
+      'base hook' => 'views_view',
+    ],
+    'views_view_field__media_center__thumbnail' => [
+      'base hook' => 'views_view_field',
+    ],
+  ];
+}
+
+/**
  * Implements hook_theme_suggestions_alter().
  *
  * Provide specific template suggestions for the media_center view.
