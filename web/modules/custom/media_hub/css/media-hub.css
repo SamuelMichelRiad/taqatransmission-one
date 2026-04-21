@@ -136,10 +136,10 @@
   box-shadow: 0 6px 20px rgba(0, 9, 63, 0.35);
 }
 
-.media-hub-qa-card--assets { background: linear-gradient(135deg, #00093f, #001a8c); }
-.media-hub-qa-card--events { background: linear-gradient(135deg, #00093f, #003080); }
-.media-hub-qa-card--people { background: linear-gradient(135deg, #1a0050, #3a1090); }
-.media-hub-qa-card--videos { background: linear-gradient(135deg, #3f0000, #8c1010); }
+.media-hub-qa-card--assets { background: linear-gradient(135deg, var(--mh-navy), #001e7a); }
+.media-hub-qa-card--events { background: linear-gradient(135deg, #00093f, #005a8c); }
+.media-hub-qa-card--people { background: linear-gradient(135deg, #003060, var(--mh-blue)); }
+.media-hub-qa-card--videos { background: linear-gradient(135deg, var(--mh-navy), var(--mh-orange)); }
 
 .media-hub-qa-card__label {
   font-family: var(--mh-font-head);
@@ -209,29 +209,31 @@
 }
 
 /* ── Grid ──────────────────────────────────────────────────── */
-.media-hub-grid .views-view-responsive-grid,
-.media-hub-grid > .views-view-grid {
-  display: grid !important;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
+/* Views grid style renders: .views-view-grid > .views-row > .views-col */
+.media-hub-grid .views-view-grid {
+  display: block;
   width: 100%;
 }
 
-/* Views grid inner wrappers */
-.media-hub-grid .views-view-responsive-grid__item,
+.media-hub-grid .views-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
 .media-hub-grid .views-col {
   padding: 0 !important;
+  min-width: 0;
 }
 
 @media (max-width: 1200px) {
-  .media-hub-grid .views-view-responsive-grid,
-  .media-hub-grid > .views-view-grid { grid-template-columns: repeat(4, 1fr); }
+  .media-hub-grid .views-row { grid-template-columns: repeat(4, 1fr); }
 }
 
 @media (max-width: 768px) {
   .media-hub-body { grid-template-columns: 1fr; }
-  .media-hub-grid .views-view-responsive-grid,
-  .media-hub-grid > .views-view-grid { grid-template-columns: repeat(2, 1fr); }
+  .media-hub-grid .views-row { grid-template-columns: repeat(2, 1fr); }
   .media-hub-quick-access__grid { grid-template-columns: repeat(2, 1fr); }
 }
 
