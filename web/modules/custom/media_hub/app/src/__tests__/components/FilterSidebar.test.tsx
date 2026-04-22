@@ -251,7 +251,7 @@ describe('FilterSidebar', () => {
     expect(screen.getByText('Full HD (1920–3839 px)')).toBeInTheDocument();
     expect(screen.getByText('4K+ (≥ 3840 px)')).toBeInTheDocument();
     expect(screen.getByText('DPI')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /watermarked/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /watermarked/i }).length).toBeGreaterThan(0);
     expect(screen.getByText('Not watermarked')).toBeInTheDocument();
     expect(screen.getByText('File Size')).toBeInTheDocument();
   });

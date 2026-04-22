@@ -107,7 +107,8 @@ describe('App', () => {
       nextUrls: { image: null, video: null, remote_video: null, document: null, audio: null },
     });
 
-    const eventsBtn = screen.getByRole('button', { name: 'Events' });
+    // Quick-access strip renders before the sidebar; take the first match.
+    const eventsBtn = screen.getAllByRole('button', { name: 'Events' })[0];
     await userEvent.click(eventsBtn);
 
     await waitFor(() => {
