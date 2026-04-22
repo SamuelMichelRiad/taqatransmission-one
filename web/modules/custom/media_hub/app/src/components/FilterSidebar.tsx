@@ -78,7 +78,15 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
           {terms.map((term) => {
             const checked = selected.has(term.id);
             return (
-              <label key={term.id} className="flex items-center gap-2.5 cursor-pointer group">
+              <div
+                key={term.id}
+                role="checkbox"
+                aria-checked={checked}
+                tabIndex={0}
+                className="flex items-center gap-2.5 cursor-pointer group"
+                onClick={() => onToggle(term.id)}
+                onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && onToggle(term.id)}
+              >
                 <span
                   className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition ${
                     checked
@@ -98,12 +106,6 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
                     </svg>
                   )}
                 </span>
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => onToggle(term.id)}
-                  className="sr-only"
-                />
                 <span
                   className={`text-sm transition ${
                     checked ? 'text-orange' : 'text-white/70 group-hover:text-white'
@@ -111,7 +113,7 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
                 >
                   {term.name}
                 </span>
-              </label>
+              </div>
             );
           })}
         </div>
