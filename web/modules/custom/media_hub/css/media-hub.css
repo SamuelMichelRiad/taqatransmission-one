@@ -28,16 +28,34 @@
 .path-media-hub .page-wrapper,
 .path-media-hub #page,
 .path-media-hub .layout-container,
-.path-media-hub .sidebar-grid {
+.path-media-hub .sidebar-grid,
+.path-media-hub #main,
+.path-media-hub .region--content,
+.path-media-hub .block-views-blockmediacenterpage-1 {
   max-width: 100% !important;
   width: 100% !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
+/* Re-add breathing room inside site-main only */
 .path-media-hub .site-main {
-  padding-left: 24px !important;
-  padding-right: 24px !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+/* Hide the Drupal page title — the hero already has MEDIA HUB */
+.path-media-hub .page-title-block,
+.path-media-hub .block-page-title-block {
+  display: none !important;
+}
+
+/* Hide the Keywords sidebar field — hero search replaces it */
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 .form-item-keywords,
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 .form-item-search-api-fulltext {
+  display: none !important;
 }
 
 /* ── Page wrapper ──────────────────────────────────────────── */
@@ -52,8 +70,8 @@
   overflow: hidden;
   padding: 48px 40px;
   margin-bottom: 28px;
-  margin-left: -24px;
-  margin-right: -24px;
+  margin-left: -32px;
+  margin-right: -32px;
   border-radius: 0;
 }
 
