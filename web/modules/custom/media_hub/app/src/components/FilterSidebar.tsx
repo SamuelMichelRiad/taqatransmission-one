@@ -1,5 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { TaxonomyData, FilterState } from '../types/media';
+
+const STORAGE_KEY = 'media-hub-filter-open';
+
+function readStoredOpen(): Record<string, boolean> {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}') as Record<string, boolean>;
+  } catch {
+    return {};
+  }
+}
+
+function writeStoredOpen(state: Record<string, boolean>): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    // storage unavailable — no-op
+  }
+}
 
 interface FilterSidebarProps {
   taxonomy: TaxonomyData;
@@ -15,7 +33,16 @@ interface FilterGroupProps {
 }
 
 function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
-  const [open, setOpen] = useState(true);
+  // Default open; restored from localStorage on mount.
+  const [open, setOpen] = useState(() => {
+    const stored = readStoredOpen();
+    return stored[label] ?? true;
+  });
+
+  useEffect(() => {
+    const stored = readStoredOpen();
+    writeStoredOpen({ ...stored, [label]: open });
+  }, [label, open]);
 
   if (terms.length === 0) return null;
 
