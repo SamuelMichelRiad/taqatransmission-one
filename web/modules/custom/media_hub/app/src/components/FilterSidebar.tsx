@@ -5,7 +5,6 @@ interface FilterSidebarProps {
   taxonomy: TaxonomyData;
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
-  filteredCount: number;
 }
 
 interface FilterGroupProps {
@@ -91,12 +90,7 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
   );
 }
 
-export function FilterSidebar({
-  taxonomy,
-  filters,
-  onFilterChange,
-  filteredCount,
-}: FilterSidebarProps) {
+export function FilterSidebar({ taxonomy, filters, onFilterChange }: FilterSidebarProps) {
   function toggle(field: keyof Pick<FilterState, 'categoryIds' | 'tagIds' | 'licenseIds' | 'locationIds'>, id: string) {
     const current = new Set(filters[field]);
     if (current.has(id)) current.delete(id);
@@ -137,11 +131,7 @@ export function FilterSidebar({
         )}
       </div>
 
-      {hasFilters && (
-        <div className="px-4 py-2 text-azure text-xs border-b border-white/10">
-          {filteredCount} result{filteredCount !== 1 ? 's' : ''}
-        </div>
-      )}
+
 
       <FilterGroup
         label="Category"

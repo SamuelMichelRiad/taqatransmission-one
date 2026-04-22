@@ -37,59 +37,70 @@ const mockMedia = [
   },
 ];
 
-const mockTaxonomy = {
-  categories: [
-    { id: 'cat-1', name: 'Brand Assets' },
-    { id: 'cat-2', name: 'Events' },
-  ],
-  tags: [],
-  licenses: [],
-  locations: [],
-};
+const mockTaxonomy = [
+  { id: 'cat-1', name: 'Brand Assets' },
+  { id: 'cat-2', name: 'Events' },
+];
 
 beforeEach(() => {
-  vi.spyOn(jsonapi, 'fetchAllMedia').mockResolvedValue(mockMedia);
+  vi.spyOn(jsonapi, 'fetchMediaFirstPage').mockResolvedValue({
+    items: mockMedia,
+    nextUrls: { image: null, video: null, remote_video: null, document: null, audio: null },
+  });
   vi.spyOn(jsonapi, 'fetchTaxonomy').mockImplementation((vocab) => {
-    const data: Record<string, { id: string; name: string }[]> = {
-      media_category: mockTaxonomy.categories,
-      media_tags: mockTaxonomy.tags,
-      media_license: mockTaxonomy.licenses,
-      media_location: mockTaxonomy.locations,
-    };
-    return Promise.resolve(data[vocab] ?? []);
+    if (vocab === 'media_category') return Promise.resolve(mockTaxonomy);
+    return Promise.resolve([]);
   });
 });
 
 describe('App', () => {
   it('shows loading skeleton then renders media cards', async () => {
     render(<App />);
-    // Loading skeletons visible initially (animate-pulse divs)
     await waitFor(() => {
       expect(screen.getByText('Asset One')).toBeInTheDocument();
       expect(screen.getByText('Event Photo')).toBeInTheDocument();
     });
   });
 
-  it('filters items by search query', async () => {
+  it('passes search query to API via re-fetch (debounced)', async () => {
     render(<App />);
     await waitFor(() => screen.getByText('Asset One'));
+
+    const spy = vi.spyOn(jsonapi, 'fetchMediaFirstPage').mockResolvedValue({
+      items: [mockMedia[1]],
+      nextUrls: { image: null, video: null, remote_video: null, document: null, audio: null },
+    });
 
     const searchInput = screen.getByPlaceholderText('Search media…');
     await userEvent.type(searchInput, 'Event');
 
-    expect(screen.queryByText('Asset One')).not.toBeInTheDocument();
-    expect(screen.getByText('Event Photo')).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(spy).toHaveBeenCalledWith(
+          expect.objectContaining({ search: 'Event' }),
+        );
+      },
+      { timeout: 1000 },
+    );
   });
 
   it('quick access buttons filter by category', async () => {
     render(<App />);
     await waitFor(() => screen.getByText('Asset One'));
 
+    const spy = vi.spyOn(jsonapi, 'fetchMediaFirstPage').mockResolvedValue({
+      items: [mockMedia[1]],
+      nextUrls: { image: null, video: null, remote_video: null, document: null, audio: null },
+    });
+
     const eventsBtn = screen.getByRole('button', { name: 'Events' });
     await userEvent.click(eventsBtn);
 
-    expect(screen.queryByText('Asset One')).not.toBeInTheDocument();
-    expect(screen.getByText('Event Photo')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(spy).toHaveBeenCalledWith(
+        expect.objectContaining({ categoryIds: new Set(['cat-2']) }),
+      );
+    });
   });
 
   it('opens lightbox when card is clicked', async () => {
@@ -97,7 +108,6 @@ describe('App', () => {
     await waitFor(() => screen.getByText('Asset One'));
 
     await userEvent.click(screen.getByText('Asset One'));
-
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
