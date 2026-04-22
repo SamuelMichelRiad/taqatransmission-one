@@ -466,6 +466,16 @@
 
       if (!page) return;
 
+      // Move hero before sidebar-grid so it renders full-browser-width
+      // outside the two-column grid, avoiding overlap with the filter sidebar.
+      once('mh-hero-reposition', 'body').forEach(function () {
+        var hero = document.querySelector('.media-hub-hero');
+        var grid = document.querySelector('.sidebar-grid');
+        if (hero && grid && grid.parentNode) {
+          grid.parentNode.insertBefore(hero, grid);
+        }
+      });
+
       buildCardIndex();
       buildChips();
       initHeroSearch();

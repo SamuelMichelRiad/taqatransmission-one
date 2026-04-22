@@ -60,9 +60,10 @@
   margin: 0 !important;
   box-sizing: border-box !important;
   display: block !important;
+  min-width: 0 !important;
 }
 
-/* Sidebar column: sticky */
+/* Sidebar column: sticky, white background to sit cleanly */
 .path-media-hub .sidebar-grid > .region--sidebar {
   grid-column: 2 !important;
   width: 100% !important;
@@ -73,6 +74,7 @@
   align-self: start !important;
   max-height: calc(100vh - 32px) !important;
   overflow-y: auto !important;
+  background: var(--mh-white) !important;
 }
 
 /* Intermediate wrappers */
@@ -107,9 +109,7 @@
   position: relative;
   overflow: hidden;
   padding: 48px 40px;
-  margin-bottom: 28px;
-  margin-left: -24px;   /* cancel sidebar-grid padding-left */
-  margin-right: -328px; /* cancel col-gap(24) + sidebar(280) + padding-right(24) */
+  margin-bottom: 0;
   border-radius: 0;
 }
 
@@ -510,7 +510,7 @@
 .path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group > .fieldset__wrapper {
   clear: left !important;
   background: var(--mh-white) !important;
-  padding: 6px 14px 10px !important;
+  padding: 0 14px 10px !important;
   border: 1px solid var(--mh-border) !important;
   border-top: none !important;
   border-radius: 0 0 4px 4px !important;
