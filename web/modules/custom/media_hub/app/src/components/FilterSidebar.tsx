@@ -85,7 +85,6 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
                       ? 'bg-orange border-orange'
                       : 'bg-transparent border-white/30 group-hover:border-orange/60'
                   }`}
-                  onClick={() => onToggle(term.id)}
                 >
                   {checked && (
                     <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 8" fill="none">
