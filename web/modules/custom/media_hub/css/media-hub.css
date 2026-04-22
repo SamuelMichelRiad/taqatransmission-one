@@ -26,14 +26,18 @@
 
 /* ── Full-width overrides for Olivero ──────────────────────── */
 .path-media-hub .page-wrapper,
-.path-media-hub #page {
-  max-width: 100%;
-}
-
-/* Stretch the sidebar-grid to full width */
+.path-media-hub #page,
+.path-media-hub .layout-container,
 .path-media-hub .sidebar-grid {
   max-width: 100% !important;
   width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.path-media-hub .site-main {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
 }
 
 /* ── Page wrapper ──────────────────────────────────────────── */
@@ -48,6 +52,8 @@
   overflow: hidden;
   padding: 48px 40px;
   margin-bottom: 28px;
+  margin-left: -24px;
+  margin-right: -24px;
   border-radius: 0;
 }
 
@@ -405,56 +411,48 @@
   box-sizing: border-box;
 }
 
-/* ── Filter groups — style the BEF fieldsets directly ──────── */
-/* Use display:flex to override browser fieldset/legend quirks
-   (Olivero floats the legend which causes white-box artefacts) */
-.mh-fieldset-group {
-  display: flex !important;
-  flex-direction: column !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 0 6px !important;
+/* ── Filter groups — nuclear reset, then rebuild from scratch ── */
+/* all: unset wipes every Olivero rule (float, border, bg, etc.)  */
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 6px;
   border-radius: 4px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* Legend = collapsible header */
-.mh-fieldset-group > legend {
-  font-family: var(--mh-font-head) !important;
-  display: flex !important;
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group > legend {
+  all: unset;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--mh-navy) !important;
-  color: var(--mh-white) !important;
-  padding: 10px 14px !important;
-  font-size: 0.82rem !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.5px !important;
+  background: var(--mh-navy);
+  color: var(--mh-white);
+  padding: 10px 14px;
+  font-family: var(--mh-font-head);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
   cursor: pointer;
   user-select: none;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  float: none !important;
-  order: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Fieldset body — note double-underscore BEM class */
-.mh-fieldset-group > .fieldset__wrapper {
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group > .fieldset__wrapper {
+  all: unset;
+  display: block;
   background: var(--mh-white);
   padding: 10px 14px;
-  border: 1px solid var(--mh-border) !important;
-  border-top: none !important;
-  order: 1;
+  border: 1px solid var(--mh-border);
+  border-top: none;
+  box-sizing: border-box;
 }
 
-/* Override Olivero's gray border on the wrapper */
-.fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
-  border-color: var(--mh-border) !important;
-  border-radius: 0 !important;
-}
-
-.mh-fieldset-group--collapsed > .fieldset__wrapper {
-  display: none !important;
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group--collapsed > .fieldset__wrapper {
+  display: none;
 }
 
 .mh-filter-group__chevron {
