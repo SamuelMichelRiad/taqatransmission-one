@@ -7,6 +7,9 @@ APP_DIR="$SCRIPT_DIR/web/modules/custom/media_hub/app"
 echo "→ Installing dependencies..."
 npm ci --prefix "$APP_DIR"
 
+echo "→ Running tests..."
+npm test --prefix "$APP_DIR"
+
 echo "→ Building..."
 npm run build --prefix "$APP_DIR"
 
