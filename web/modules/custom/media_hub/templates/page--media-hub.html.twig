@@ -1,0 +1,20 @@
+{#
+  Page template for the Media Hub — bypasses Olivero's constrained grid.
+  The React app (media_hub_app library) mounts to #media-hub-root.
+#}
+{% if page.header %}
+  <header role="banner" class="media-hub-page-header">
+    {{ page.header }}
+  </header>
+{% endif %}
+
+<div
+  id="media-hub-root"
+  data-base-path="{{ base_path }}"
+></div>
+
+{% if page.footer %}
+  <footer class="media-hub-page-footer">
+    {{ page.footer }}
+  </footer>
+{% endif %}

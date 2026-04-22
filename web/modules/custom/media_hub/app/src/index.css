@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #00093f;
+  --color-navy-light: #0a1a6e;
+  --color-orange: #ff5f00;
+  --color-orange-hover: #e05400;
+  --color-azure: #089ed1;
+
+  --font-sans: Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* Scope a light CSS reset so Olivero's global styles don't bleed in */
+#media-hub-root,
+#media-hub-root * {
+  box-sizing: border-box;
+}
+
+#media-hub-root {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  color: #1a1a2e;
+  background: #f4f6f9;
+  min-height: 100vh;
+}
+
+/* Olivero override: ensure the main content area fills full width */
+.path-media-hub .layout-container,
+.path-media-hub #main,
+.path-media-hub .site-main {
+  max-width: none !important;
+  grid-column: 1 / -1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}

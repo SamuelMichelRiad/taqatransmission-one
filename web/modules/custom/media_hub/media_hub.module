@@ -4,125 +4,24 @@
  * Media Hub module hooks.
  */
 
-use Drupal\media\MediaInterface;
-
 /**
  * Implements hook_theme().
  */
 function media_hub_theme(): array {
   return [
-    'views_view__media_center' => [
-      'base hook' => 'views_view',
-    ],
-    'views_view_field__media_center__thumbnail' => [
-      'base hook' => 'views_view_field',
+    'page__media_hub' => [
+      'base hook' => 'page',
     ],
   ];
 }
 
 /**
  * Implements hook_theme_suggestions_alter().
- *
- * Provide specific template suggestions for the media_center view.
  */
 function media_hub_theme_suggestions_alter(array &$suggestions, array $variables, string $hook): void {
-  if ($hook === 'views_view' && isset($variables['view']) && $variables['view']->id() === 'media_center') {
-    $suggestions[] = 'views_view__media_center';
+  if ($hook === 'page' && \Drupal::routeMatch()->getRouteName() === 'view.media_center.page_1') {
+    $suggestions[] = 'page__media_hub';
   }
-  if ($hook === 'views_view_field' && isset($variables['view']) && $variables['view']->id() === 'media_center' && $variables['field']->field === 'thumbnail') {
-    $suggestions[] = 'views_view_field__media_center__thumbnail';
-  }
-}
-
-/**
- * Implements hook_preprocess_views_view_field() for the thumbnail field.
- *
- * Attaches extra card data as template variables.
- */
-function media_hub_preprocess_views_view_field(&$variables): void {
-  if ($variables['view']->id() !== 'media_center' || $variables['field']->field !== 'thumbnail') {
-    return;
-  }
-
-  $row = $variables['row'];
-  $entity = $row->_object ? $row->_object->getValue() : NULL;
-  if (!$entity instanceof MediaInterface) {
-    return;
-  }
-
-  /** @var \Drupal\Core\File\FileUrlGeneratorInterface $url_generator */
-  $url_generator = \Drupal::service('file_url_generator');
-
-  $bundle = $entity->bundle();
-  $media_id = $entity->id();
-  $name = $entity->label();
-  $caption = '';
-  $download_url = '';
-  $file_size = '';
-  $file_ext = '';
-  $video_url = '';
-
-  if ($entity->hasField('field_media_caption') && !$entity->get('field_media_caption')->isEmpty()) {
-    $caption = $entity->get('field_media_caption')->value;
-  }
-
-  switch ($bundle) {
-    case 'image':
-      if ($entity->hasField('field_media_image') && !$entity->get('field_media_image')->isEmpty()) {
-        $file = $entity->get('field_media_image')->entity;
-        if ($file) {
-          $download_url = $url_generator->generateAbsoluteString($file->getFileUri());
-        }
-      }
-      break;
-
-    case 'video':
-      if ($entity->hasField('field_media_video_file') && !$entity->get('field_media_video_file')->isEmpty()) {
-        $file = $entity->get('field_media_video_file')->entity;
-        if ($file) {
-          $download_url = $url_generator->generateAbsoluteString($file->getFileUri());
-          $video_url = $download_url;
-        }
-      }
-      break;
-
-    case 'remote_video':
-      if ($entity->hasField('field_media_oembed_video') && !$entity->get('field_media_oembed_video')->isEmpty()) {
-        $video_url = $entity->get('field_media_oembed_video')->value;
-      }
-      break;
-
-    case 'document':
-      $doc_field = $entity->hasField('field_media_document') ? 'field_media_document' : 'field_media_file';
-      if ($entity->hasField($doc_field) && !$entity->get($doc_field)->isEmpty()) {
-        $file = $entity->get($doc_field)->entity;
-        if ($file) {
-          $download_url = $url_generator->generateAbsoluteString($file->getFileUri());
-          $file_size = format_size($file->getSize());
-          $file_ext = strtoupper(pathinfo($file->getFilename(), PATHINFO_EXTENSION));
-        }
-      }
-      break;
-
-    case 'audio':
-      $audio_field = $entity->hasField('field_media_audio_file') ? 'field_media_audio_file' : 'field_media_file';
-      if ($entity->hasField($audio_field) && !$entity->get($audio_field)->isEmpty()) {
-        $file = $entity->get($audio_field)->entity;
-        if ($file) {
-          $download_url = $url_generator->generateAbsoluteString($file->getFileUri());
-        }
-      }
-      break;
-  }
-
-  $variables['media_id'] = $media_id;
-  $variables['media_bundle'] = $bundle;
-  $variables['media_name'] = $name;
-  $variables['media_caption'] = $caption;
-  $variables['media_download_url'] = $download_url;
-  $variables['media_file_size'] = $file_size;
-  $variables['media_file_ext'] = $file_ext;
-  $variables['media_video_url'] = $video_url;
 }
 
 /**
@@ -131,6 +30,6 @@ function media_hub_preprocess_views_view_field(&$variables): void {
 function media_hub_page_attachments(array &$attachments): void {
   $route = \Drupal::routeMatch()->getRouteName();
   if ($route === 'view.media_center.page_1') {
-    $attachments['#attached']['library'][] = 'media_hub/media_hub';
+    $attachments['#attached']['library'][] = 'media_hub/media_hub_app';
   }
 }
