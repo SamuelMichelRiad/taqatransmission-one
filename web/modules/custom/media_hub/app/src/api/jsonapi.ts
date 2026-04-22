@@ -18,23 +18,43 @@ export function resolveField<T>(item: Record<string, unknown>, key: string): T |
 }
 
 function resolveRefArray(item: Record<string, unknown>, field: string): Array<{ id: string }> {
+  // Try flattened (root level) and attributes
   const val = resolveField<unknown>(item, field);
-  if (!val) return [];
-  if (Array.isArray(val)) return val as Array<{ id: string }>;
-  const data = (val as Record<string, unknown>)['data'];
-  if (Array.isArray(data)) return data as Array<{ id: string }>;
+  if (val) {
+    if (Array.isArray(val)) return val as Array<{ id: string }>;
+    const data = (val as Record<string, unknown>)['data'];
+    if (Array.isArray(data)) return data as Array<{ id: string }>;
+  }
+  // Standard JSON:API: item.relationships[field].data[]
+  const rels = item['relationships'] as Record<string, unknown> | undefined;
+  if (rels) {
+    const rel = rels[field] as Record<string, unknown> | undefined;
+    if (rel) {
+      const data = rel['data'];
+      if (Array.isArray(data)) return data as Array<{ id: string }>;
+    }
+  }
   return [];
 }
 
 function resolveRefSingle(item: Record<string, unknown>, field: string): { id: string } | null {
+  // Try flattened (root level) and attributes
   const val = resolveField<unknown>(item, field);
-  if (!val || typeof val !== 'object') return null;
-  const obj = val as Record<string, unknown>;
-  // Flattened: { type, id, meta, ... }
-  if (typeof obj['id'] === 'string') return obj as { id: string };
-  // Standard JSON:API: { data: { type, id, meta } }
-  const data = obj['data'] as Record<string, unknown> | undefined;
-  if (data && typeof data['id'] === 'string') return data as { id: string };
+  if (val && typeof val === 'object') {
+    const obj = val as Record<string, unknown>;
+    if (typeof obj['id'] === 'string') return obj as { id: string };
+    const data = obj['data'] as Record<string, unknown> | undefined;
+    if (data && typeof data['id'] === 'string') return data as { id: string };
+  }
+  // Standard JSON:API: item.relationships[field].data
+  const rels = item['relationships'] as Record<string, unknown> | undefined;
+  if (rels) {
+    const rel = rels[field] as Record<string, unknown> | undefined;
+    if (rel) {
+      const data = rel['data'] as Record<string, unknown> | undefined;
+      if (data && typeof data['id'] === 'string') return data as { id: string };
+    }
+  }
   return null;
 }
 
