@@ -27,11 +27,7 @@
 /* ── Full-width overrides for Olivero ──────────────────────── */
 .path-media-hub .page-wrapper,
 .path-media-hub #page,
-.path-media-hub .layout-container,
-.path-media-hub .sidebar-grid,
-.path-media-hub #main,
-.path-media-hub .region--content,
-.path-media-hub .block-views-blockmediacenterpage-1 {
+.path-media-hub .layout-container {
   max-width: 100% !important;
   width: 100% !important;
   padding-left: 0 !important;
@@ -40,10 +36,52 @@
   margin-right: 0 !important;
 }
 
-/* Re-add breathing room inside site-main only */
-.path-media-hub .site-main {
-  padding-left: 32px !important;
-  padding-right: 32px !important;
+/* Replace Olivero's 14-column grid with a clean 2-column layout.
+   Olivero uses grid-column: 3/11 on site-main, which overrides width:100%.
+   Redefining grid-template-columns makes site-main take the full 1fr. */
+.path-media-hub .sidebar-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 280px !important;
+  column-gap: 24px !important;
+  align-items: start !important;
+  padding: 0 24px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+/* Main content column */
+.path-media-hub .sidebar-grid > .site-main,
+.path-media-hub #main {
+  grid-column: 1 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  display: block !important;
+}
+
+/* Sidebar column: sticky */
+.path-media-hub .sidebar-grid > .region--sidebar {
+  grid-column: 2 !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: sticky !important;
+  top: 16px !important;
+  align-self: start !important;
+  max-height: calc(100vh - 32px) !important;
+  overflow-y: auto !important;
+}
+
+/* Intermediate wrappers */
+.path-media-hub .region--content,
+.path-media-hub .block-views-blockmediacenterpage-1 {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 /* Hide the Drupal page title — the hero already has MEDIA HUB */
@@ -70,8 +108,8 @@
   overflow: hidden;
   padding: 48px 40px;
   margin-bottom: 28px;
-  margin-left: -32px;
-  margin-right: -32px;
+  margin-left: -24px;   /* cancel sidebar-grid padding-left */
+  margin-right: -328px; /* cancel col-gap(24) + sidebar(280) + padding-right(24) */
   border-radius: 0;
 }
 
@@ -429,56 +467,79 @@
   box-sizing: border-box;
 }
 
-/* ── Filter groups — nuclear reset, then rebuild from scratch ── */
-/* all: unset wipes every Olivero rule (float, border, bg, etc.)  */
+/* ── Filter groups — targeted overrides (Olivero has no !important) ── */
+/* Keep Olivero's float:left layout; just override colors and spacing.   */
+
 .path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group {
-  all: unset;
-  display: flex;
-  flex-direction: column;
-  margin: 0 0 6px;
-  border-radius: 4px;
-  overflow: hidden;
-  box-sizing: border-box;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 0 6px !important;
+  background: none !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  border-radius: 4px !important;
 }
 
+/* Legend: navy header. Keep float:left so the wrapper auto-clears below it. */
 .path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group > legend {
-  all: unset;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--mh-navy);
-  color: var(--mh-white);
-  padding: 10px 14px;
-  font-family: var(--mh-font-head);
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  user-select: none;
-  width: 100%;
-  box-sizing: border-box;
+  float: left !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: var(--mh-navy) !important;
+  background-color: var(--mh-navy) !important;
+  padding: 0 !important;
+  border-radius: 4px 4px 0 0 !important;
+  cursor: pointer !important;
 }
 
+/* Label span inside legend: flex row so chevron sits on the right */
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group > legend .fieldset__label {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  color: var(--mh-white) !important;
+  padding: 8px 14px !important;
+  font-family: var(--mh-font-head) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+  line-height: 1.4 !important;
+}
+
+/* Wrapper: clears the float, appears directly below legend */
 .path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group > .fieldset__wrapper {
-  all: unset;
-  display: block;
-  background: var(--mh-white);
-  padding: 10px 14px;
-  border: 1px solid var(--mh-border);
-  border-top: none;
-  box-sizing: border-box;
+  clear: left !important;
+  background: var(--mh-white) !important;
+  padding: 6px 14px 10px !important;
+  border: 1px solid var(--mh-border) !important;
+  border-top: none !important;
+  border-radius: 0 0 4px 4px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Override Olivero's gray border on wrapper (specificity 0-3-0 < our 1-3-0) */
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 .fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
+  border: 1px solid var(--mh-border) !important;
+  border-top: none !important;
+  border-radius: 0 0 4px 4px !important;
+}
+
+/* Reduce Olivero's form--inline top margin (default ~9px) */
+.path-media-hub #block-olivero-exposedformmedia-centerpage-1 .form--inline > * {
+  margin-top: 3px !important;
+  margin-bottom: 0 !important;
 }
 
 .path-media-hub #block-olivero-exposedformmedia-centerpage-1 fieldset.mh-fieldset-group--collapsed > .fieldset__wrapper {
-  display: none;
+  display: none !important;
 }
 
+/* Chevron appended to legend by JS — flex item inside .fieldset__label */
 .mh-filter-group__chevron {
   color: var(--mh-blue);
   font-size: 0.7rem;
   transition: transform 0.2s;
-  margin-left: auto;
-  padding-left: 8px;
   flex-shrink: 0;
 }
 

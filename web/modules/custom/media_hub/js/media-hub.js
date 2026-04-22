@@ -84,17 +84,20 @@
         }
       }
 
-      // Add chevron to legend and wire up toggle
-      const legend = fs.querySelector('legend');
-      if (legend && !legend.querySelector('.mh-filter-group__chevron')) {
+      // Add chevron inside .fieldset__label (flex container) and wire up toggle
+      const label = fs.querySelector('legend .fieldset__label');
+      if (label && !label.querySelector('.mh-filter-group__chevron')) {
         const chevron = document.createElement('span');
         chevron.className = 'mh-filter-group__chevron';
         chevron.setAttribute('aria-hidden', 'true');
         chevron.innerHTML = '&#9660;';
-        legend.appendChild(chevron);
-        legend.addEventListener('click', function () {
-          fs.classList.toggle('mh-fieldset-group--collapsed');
-        });
+        label.appendChild(chevron);
+        const legend = fs.querySelector('legend');
+        if (legend) {
+          legend.addEventListener('click', function () {
+            fs.classList.toggle('mh-fieldset-group--collapsed');
+          });
+        }
       }
 
       // Add Reset button to tags group
