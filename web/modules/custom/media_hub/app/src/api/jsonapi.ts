@@ -181,7 +181,9 @@ async function fetchBundlePage(
 
   const res = await fetch(fetchUrl);
   if (!res.ok) {
-    if (res.status === 404) return { items: [], nextUrl: null };
+    // 404 = bundle doesn't exist; 400 = a filter field doesn't exist on this bundle.
+    // Both mean zero results for this bundle — not a fatal error.
+    if (res.status === 404 || res.status === 400) return { items: [], nextUrl: null };
     throw new Error(`Failed to fetch ${bundle}: ${res.status}`);
   }
 
