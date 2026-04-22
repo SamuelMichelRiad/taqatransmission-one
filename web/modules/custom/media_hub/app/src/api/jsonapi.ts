@@ -38,22 +38,34 @@ function resolveRefSingle(item: Record<string, unknown>, field: string): { id: s
   return null;
 }
 
-function buildFileMap(included: Record<string, unknown>[]): Map<string, string> {
-  const map = new Map<string, string>();
+interface FileEntry {
+  url: string;
+  width?: number;
+  height?: number;
+  filesize?: number;
+}
+
+function buildFileMap(included: Record<string, unknown>[]): Map<string, FileEntry> {
+  const map = new Map<string, FileEntry>();
   for (const inc of included) {
     if (inc['type'] !== 'file--file') continue;
     const id = inc['id'] as string | undefined;
     if (!id) continue;
-    // Try both standard (attributes.uri.url) and flattened (uri.url)
     const uri = resolveField<{ url?: string }>(inc, 'uri');
-    if (uri?.url) map.set(id, uri.url);
+    if (!uri?.url) continue;
+    map.set(id, {
+      url: uri.url,
+      width: resolveField<number>(inc, 'width') ?? undefined,
+      height: resolveField<number>(inc, 'height') ?? undefined,
+      filesize: resolveField<number>(inc, 'filesize') ?? undefined,
+    });
   }
   return map;
 }
 
 // Fallback: batch-fetch file entities by UUID when `include` didn't yield URLs.
-async function fetchFileUrlsByIds(ids: string[]): Promise<Map<string, string>> {
-  const map = new Map<string, string>();
+async function fetchFileUrlsByIds(ids: string[]): Promise<Map<string, FileEntry>> {
+  const map = new Map<string, FileEntry>();
   if (ids.length === 0) return map;
 
   const params = new URLSearchParams();
@@ -67,7 +79,14 @@ async function fetchFileUrlsByIds(ids: string[]): Promise<Map<string, string>> {
     const data = (await res.json()) as { data: Record<string, unknown>[] };
     for (const item of data.data) {
       const uri = resolveField<{ url?: string }>(item, 'uri');
-      if (uri?.url) map.set(item['id'] as string, uri.url);
+      if (uri?.url) {
+        map.set(item['id'] as string, {
+          url: uri.url,
+          width: resolveField<number>(item, 'width') ?? undefined,
+          height: resolveField<number>(item, 'height') ?? undefined,
+          filesize: resolveField<number>(item, 'filesize') ?? undefined,
+        });
+      }
     }
   } catch {
     // non-fatal
@@ -75,22 +94,39 @@ async function fetchFileUrlsByIds(ids: string[]): Promise<Map<string, string>> {
   return map;
 }
 
-function parseMediaItem(raw: Record<string, unknown>, fileMap: Map<string, string>): MediaItem {
+function parseMediaItem(raw: Record<string, unknown>, fileMap: Map<string, FileEntry>): MediaItem {
   const bundle = (raw['type'] as string).replace('media--', '') as MediaItem['bundle'];
 
   const thumbnailRef = resolveRefSingle(raw, 'thumbnail');
   const imageRef = resolveRefSingle(raw, 'field_media_image');
   const videoFileRef = resolveRefSingle(raw, 'field_media_video_file');
+  const audioFileRef = resolveRefSingle(raw, 'field_media_audio_file');
+  const documentFileRef =
+    resolveRefSingle(raw, 'field_media_document') ?? resolveRefSingle(raw, 'field_media_file');
 
-  const thumbnailUrl = thumbnailRef ? (fileMap.get(thumbnailRef.id) ?? '') : '';
-  const fullUrl = imageRef ? (fileMap.get(imageRef.id) ?? thumbnailUrl) : thumbnailUrl;
-  const videoFileUrl = videoFileRef ? (fileMap.get(videoFileRef.id) ?? '') : '';
+  const thumbnailEntry = thumbnailRef ? fileMap.get(thumbnailRef.id) : undefined;
+  const imageEntry = imageRef ? fileMap.get(imageRef.id) : undefined;
+  const videoFileEntry = videoFileRef ? fileMap.get(videoFileRef.id) : undefined;
+  const audioFileEntry = audioFileRef ? fileMap.get(audioFileRef.id) : undefined;
+  const documentFileEntry = documentFileRef ? fileMap.get(documentFileRef.id) : undefined;
+
+  const thumbnailUrl = thumbnailEntry?.url ?? '';
+  const fullUrl = imageEntry?.url ?? thumbnailUrl;
+  const videoFileUrl = videoFileEntry?.url ?? '';
 
   const oembedVal = resolveField<string>(raw, 'field_media_oembed_video');
   const videoUrl = videoFileUrl || (typeof oembedVal === 'string' ? oembedVal : '');
 
   const captionRaw = resolveField<{ processed?: string; value?: string }>(raw, 'field_media_caption');
   const caption = captionRaw?.processed ?? captionRaw?.value ?? '';
+
+  // Primary file entry for technical metadata (dimensions, file size)
+  const primaryEntry =
+    bundle === 'image' ? imageEntry :
+    bundle === 'video' ? videoFileEntry :
+    bundle === 'audio' ? audioFileEntry :
+    bundle === 'document' ? documentFileEntry :
+    undefined;
 
   return {
     id: raw['id'] as string,
@@ -104,8 +140,18 @@ function parseMediaItem(raw: Record<string, unknown>, fileMap: Map<string, strin
     tagIds: resolveRefArray(raw, 'field_media_tags').map((r) => r.id),
     licenseIds: resolveRefArray(raw, 'field_media_license').map((r) => r.id),
     locationIds: resolveRefArray(raw, 'field_media_location').map((r) => r.id),
+    assetTypeIds: resolveRefArray(raw, 'field_media_asset_type').map((r) => r.id),
+    graphicalElementIds: resolveRefArray(raw, 'field_image_graphical_element').map((r) => r.id),
+    peopleFeaturedIds: resolveRefArray(raw, 'field_media_people_featured').map((r) => r.id),
+    publicationIds: resolveRefArray(raw, 'field_media_publication').map((r) => r.id),
+    siteIds: resolveRefArray(raw, 'field_media_site').map((r) => r.id),
+    solutionSegmentIds: resolveRefArray(raw, 'field_media_solution_segment').map((r) => r.id),
+    themeIds: resolveRefArray(raw, 'field_media_theme').map((r) => r.id),
     created: (resolveField<string>(raw, 'created') ?? (raw['created'] as string) ?? '') as string,
     videoUrl,
+    width: bundle === 'image' ? primaryEntry?.width : undefined,
+    height: bundle === 'image' ? primaryEntry?.height : undefined,
+    filesize: primaryEntry?.filesize,
   };
 }
 
@@ -205,14 +251,21 @@ async function fetchBundlePage(
   // Collect file IDs not resolved via include — batch-fetch as fallback.
   const unresolvedIds = new Set<string>();
   for (const raw of data.data) {
-    for (const field of ['thumbnail', 'field_media_image', 'field_media_video_file']) {
+    for (const field of [
+      'thumbnail',
+      'field_media_image',
+      'field_media_video_file',
+      'field_media_audio_file',
+      'field_media_document',
+      'field_media_file',
+    ]) {
       const ref = resolveRefSingle(raw, field);
       if (ref && !fileMap.has(ref.id)) unresolvedIds.add(ref.id);
     }
   }
   if (unresolvedIds.size > 0) {
     const fallback = await fetchFileUrlsByIds([...unresolvedIds]);
-    fallback.forEach((url, id) => fileMap.set(id, url));
+    fallback.forEach((entry, id) => fileMap.set(id, entry));
   }
 
   return {

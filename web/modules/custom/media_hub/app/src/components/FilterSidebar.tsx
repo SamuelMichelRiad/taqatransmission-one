@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { TaxonomyData, FilterState } from '../types/media';
+import type { TaxonomyData, FilterState, VisibleIds, Orientation, SizeBucket } from '../types/media';
 
 const STORAGE_KEY = 'media-hub-filter-open';
 
@@ -22,6 +22,8 @@ function writeStoredOpen(state: Record<string, boolean>): void {
 interface FilterSidebarProps {
   taxonomy: TaxonomyData;
   filters: FilterState;
+  visibleIds: VisibleIds;
+  loading: boolean;
   onFilterChange: (filters: FilterState) => void;
 }
 
@@ -33,7 +35,6 @@ interface FilterGroupProps {
 }
 
 function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
-  // Default open; restored from localStorage on mount.
   const [open, setOpen] = useState(() => {
     const stored = readStoredOpen();
     return stored[label] ?? true;
@@ -128,11 +129,36 @@ type IdFilterKey = keyof Pick<
   | 'themeIds'
 >;
 
-export function FilterSidebar({ taxonomy, filters, onFilterChange }: FilterSidebarProps) {
+const ORIENTATION_OPTIONS: { value: Orientation; label: string }[] = [
+  { value: 'landscape', label: 'Landscape' },
+  { value: 'portrait', label: 'Portrait' },
+  { value: 'square', label: 'Square' },
+];
+
+const IMAGE_SIZE_OPTIONS: { value: SizeBucket; label: string }[] = [
+  { value: 'small', label: 'Small (< 2 MP)' },
+  { value: 'medium', label: 'Medium (2–8 MP)' },
+  { value: 'large', label: 'Large (> 8 MP)' },
+];
+
+const FILE_SIZE_OPTIONS: { value: SizeBucket; label: string }[] = [
+  { value: 'small', label: 'Small (< 1 MB)' },
+  { value: 'medium', label: 'Medium (1–10 MB)' },
+  { value: 'large', label: 'Large (> 10 MB)' },
+];
+
+export function FilterSidebar({ taxonomy, filters, visibleIds, loading, onFilterChange }: FilterSidebarProps) {
   function toggle(field: IdFilterKey, id: string) {
     const current = new Set(filters[field]);
     if (current.has(id)) current.delete(id);
     else current.add(id);
+    onFilterChange({ ...filters, [field]: current });
+  }
+
+  function toggleTech(field: 'orientation' | 'imageSize' | 'fileSize', value: string) {
+    const current = new Set(filters[field] as Set<string>);
+    if (current.has(value)) current.delete(value);
+    else current.add(value);
     onFilterChange({ ...filters, [field]: current });
   }
 
@@ -154,7 +180,22 @@ export function FilterSidebar({ taxonomy, filters, onFilterChange }: FilterSideb
       siteIds: new Set(),
       solutionSegmentIds: new Set(),
       themeIds: new Set(),
+      orientation: new Set(),
+      imageSize: new Set(),
+      fileSize: new Set(),
     });
+  }
+
+  // While loading, show all taxonomy terms so the sidebar isn't empty.
+  // Once loaded, restrict to terms present in the current result set
+  // (always keeping selected terms visible so they can be deselected).
+  function visibleTerms(
+    terms: { id: string; name: string }[],
+    available: Set<string>,
+    selected: Set<string>,
+  ): { id: string; name: string }[] {
+    if (loading) return terms;
+    return terms.filter((t) => available.has(t.id) || selected.has(t.id));
   }
 
   return (
@@ -174,69 +215,95 @@ export function FilterSidebar({ taxonomy, filters, onFilterChange }: FilterSideb
 
       <FilterGroup
         label="Category"
-        terms={taxonomy.categories}
+        terms={visibleTerms(taxonomy.categories, visibleIds.categoryIds, filters.categoryIds)}
         selected={filters.categoryIds}
         onToggle={(id) => toggle('categoryIds', id)}
       />
       <FilterGroup
         label="Asset Type"
-        terms={taxonomy.assetTypes}
+        terms={visibleTerms(taxonomy.assetTypes, visibleIds.assetTypeIds, filters.assetTypeIds)}
         selected={filters.assetTypeIds}
         onToggle={(id) => toggle('assetTypeIds', id)}
       />
       <FilterGroup
         label="Theme"
-        terms={taxonomy.themes}
+        terms={visibleTerms(taxonomy.themes, visibleIds.themeIds, filters.themeIds)}
         selected={filters.themeIds}
         onToggle={(id) => toggle('themeIds', id)}
       />
       <FilterGroup
         label="People"
-        terms={taxonomy.peopleFeatured}
+        terms={visibleTerms(taxonomy.peopleFeatured, visibleIds.peopleFeaturedIds, filters.peopleFeaturedIds)}
         selected={filters.peopleFeaturedIds}
         onToggle={(id) => toggle('peopleFeaturedIds', id)}
       />
       <FilterGroup
         label="Site"
-        terms={taxonomy.sites}
+        terms={visibleTerms(taxonomy.sites, visibleIds.siteIds, filters.siteIds)}
         selected={filters.siteIds}
         onToggle={(id) => toggle('siteIds', id)}
       />
       <FilterGroup
         label="Solution Segment"
-        terms={taxonomy.solutionSegments}
+        terms={visibleTerms(taxonomy.solutionSegments, visibleIds.solutionSegmentIds, filters.solutionSegmentIds)}
         selected={filters.solutionSegmentIds}
         onToggle={(id) => toggle('solutionSegmentIds', id)}
       />
       <FilterGroup
         label="Publication"
-        terms={taxonomy.publications}
+        terms={visibleTerms(taxonomy.publications, visibleIds.publicationIds, filters.publicationIds)}
         selected={filters.publicationIds}
         onToggle={(id) => toggle('publicationIds', id)}
       />
       <FilterGroup
         label="Graphical Element"
-        terms={taxonomy.graphicalElements}
+        terms={visibleTerms(taxonomy.graphicalElements, visibleIds.graphicalElementIds, filters.graphicalElementIds)}
         selected={filters.graphicalElementIds}
         onToggle={(id) => toggle('graphicalElementIds', id)}
       />
       <FilterGroup
         label="License"
-        terms={taxonomy.licenses}
+        terms={visibleTerms(taxonomy.licenses, visibleIds.licenseIds, filters.licenseIds)}
         selected={filters.licenseIds}
         onToggle={(id) => toggle('licenseIds', id)}
       />
       <FilterGroup
         label="Tags"
-        terms={taxonomy.tags}
+        terms={visibleTerms(taxonomy.tags, visibleIds.tagIds, filters.tagIds)}
         selected={filters.tagIds}
         onToggle={(id) => toggle('tagIds', id)}
       />
       <FilterGroup
         label="Location"
-        terms={taxonomy.locations}
+        terms={visibleTerms(taxonomy.locations, visibleIds.locationIds, filters.locationIds)}
         selected={filters.locationIds}
         onToggle={(id) => toggle('locationIds', id)}
+      />
+
+      {/* Technical filters — derived from file metadata, applied client-side */}
+      <FilterGroup
+        label="Orientation"
+        terms={ORIENTATION_OPTIONS
+          .filter((o) => visibleIds.orientations.has(o.value) || filters.orientation.has(o.value))
+          .map((o) => ({ id: o.value, name: o.label }))}
+        selected={filters.orientation as Set<string>}
+        onToggle={(v) => toggleTech('orientation', v)}
+      />
+      <FilterGroup
+        label="Image Size"
+        terms={IMAGE_SIZE_OPTIONS
+          .filter((o) => visibleIds.imageSizes.has(o.value) || filters.imageSize.has(o.value))
+          .map((o) => ({ id: o.value, name: o.label }))}
+        selected={filters.imageSize as Set<string>}
+        onToggle={(v) => toggleTech('imageSize', v)}
+      />
+      <FilterGroup
+        label="File Size"
+        terms={FILE_SIZE_OPTIONS
+          .filter((o) => visibleIds.fileSizes.has(o.value) || filters.fileSize.has(o.value))
+          .map((o) => ({ id: o.value, name: o.label }))}
+        selected={filters.fileSize as Set<string>}
+        onToggle={(v) => toggleTech('fileSize', v)}
       />
     </aside>
   );

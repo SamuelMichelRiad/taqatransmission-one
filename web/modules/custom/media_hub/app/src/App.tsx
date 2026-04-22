@@ -20,7 +20,7 @@ export function App() {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
 
   const { taxonomy } = useTaxonomy();
-  const { items, loading, loadingMore, hasMore, loadMore, error } = useMedia(filters);
+  const { items, loading, loadingMore, hasMore, loadMore, error, visibleIds } = useMedia(filters);
 
   const categoryByName = useMemo(() => {
     const map = new Map<string, string>();
@@ -89,6 +89,8 @@ export function App() {
         <FilterSidebar
           taxonomy={taxonomy}
           filters={filters}
+          visibleIds={visibleIds}
+          loading={loading}
           onFilterChange={setFilters}
         />
 

@@ -18,6 +18,13 @@ function makeItem(id: string, created = '2025-01-01T00:00:00+00:00'): MediaItem 
     tagIds: [],
     licenseIds: [],
     locationIds: [],
+    assetTypeIds: [],
+    graphicalElementIds: [],
+    peopleFeaturedIds: [],
+    publicationIds: [],
+    siteIds: [],
+    solutionSegmentIds: [],
+    themeIds: [],
     created,
     videoUrl: '',
   };
