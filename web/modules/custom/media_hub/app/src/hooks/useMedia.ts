@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { fetchMediaFirstPage, fetchMediaMorePages } from '../api/jsonapi';
-import type { FilterState, MediaItem, VisibleIds, Orientation, SizeBucket } from '../types/media';
-import { emptyVisibleIds, itemOrientation, itemImageSize, itemFileSize } from '../types/media';
+import type { FilterState, MediaItem, VisibleIds } from '../types/media';
+import {
+  emptyVisibleIds,
+  itemOrientation,
+  itemResolutionPreset,
+  itemDpiBucket,
+  itemFileSize,
+} from '../types/media';
 
 export interface UseMediaResult {
   items: MediaItem[];
@@ -23,8 +29,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 // Stable key for the server-side filters (search + all taxonomy Sets).
-// Technical filters (orientation, imageSize, fileSize) are client-side only
-// and must NOT be included here — they don't trigger a server re-fetch.
+// Technical filters are client-side only and must NOT be included here.
 function serverFiltersKey(filters: FilterState): string {
   return JSON.stringify({
     s: filters.search,
@@ -44,8 +49,12 @@ function serverFiltersKey(filters: FilterState): string {
 
 function technicalFiltersKey(filters: FilterState): string {
   return JSON.stringify({
+    mt: [...filters.mediaType].sort(),
     o: [...filters.orientation].sort(),
-    is: [...filters.imageSize].sort(),
+    cm: [...filters.colorModel].sort(),
+    rp: [...filters.resolutionPreset].sort(),
+    dp: [...filters.dpi].sort(),
+    wm: [...filters.watermarked].sort(),
     fs: [...filters.fileSize].sort(),
   });
 }
@@ -53,24 +62,48 @@ function technicalFiltersKey(filters: FilterState): string {
 function applyTechnicalFilters(items: MediaItem[], filters: FilterState): MediaItem[] {
   let result = items;
 
+  if (filters.mediaType.size > 0) {
+    result = result.filter((item) => filters.mediaType.has(item.bundle));
+  }
+
   if (filters.orientation.size > 0) {
     result = result.filter((item) => {
       const o = itemOrientation(item);
-      return o !== null && filters.orientation.has(o as Orientation);
+      return o !== null && filters.orientation.has(o);
     });
   }
 
-  if (filters.imageSize.size > 0) {
+  if (filters.colorModel.size > 0) {
+    result = result.filter(
+      (item) => item.imageColorModel !== undefined && filters.colorModel.has(item.imageColorModel),
+    );
+  }
+
+  if (filters.resolutionPreset.size > 0) {
     result = result.filter((item) => {
-      const s = itemImageSize(item);
-      return s !== null && filters.imageSize.has(s as SizeBucket);
+      const rp = itemResolutionPreset(item);
+      return rp !== null && filters.resolutionPreset.has(rp);
+    });
+  }
+
+  if (filters.dpi.size > 0) {
+    result = result.filter((item) => {
+      const d = itemDpiBucket(item);
+      return d !== null && filters.dpi.has(d);
+    });
+  }
+
+  if (filters.watermarked.size > 0) {
+    result = result.filter((item) => {
+      if (item.watermarked === undefined) return false;
+      return filters.watermarked.has(item.watermarked ? 'yes' : 'no');
     });
   }
 
   if (filters.fileSize.size > 0) {
     result = result.filter((item) => {
-      const s = itemFileSize(item);
-      return s !== null && filters.fileSize.has(s as SizeBucket);
+      const fs = itemFileSize(item);
+      return fs !== null && filters.fileSize.has(fs);
     });
   }
 
@@ -93,10 +126,23 @@ function computeVisibleIds(items: MediaItem[]): VisibleIds {
     item.solutionSegmentIds.forEach((id) => result.solutionSegmentIds.add(id));
     item.themeIds.forEach((id) => result.themeIds.add(id));
 
+    result.bundles.add(item.bundle);
+
     const o = itemOrientation(item);
     if (o) result.orientations.add(o);
-    const is = itemImageSize(item);
-    if (is) result.imageSizes.add(is);
+
+    if (item.imageColorModel) result.colorModels.add(item.imageColorModel);
+
+    const rp = itemResolutionPreset(item);
+    if (rp) result.resolutionPresets.add(rp);
+
+    const dpi = itemDpiBucket(item);
+    if (dpi) result.dpiBuckets.add(dpi);
+
+    if (item.watermarked !== undefined) {
+      result.watermarkedValues.add(item.watermarked ? 'yes' : 'no');
+    }
+
     const fs = itemFileSize(item);
     if (fs) result.fileSizes.add(fs);
   }

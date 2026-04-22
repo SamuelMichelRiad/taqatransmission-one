@@ -23,12 +23,12 @@ const taxonomy: TaxonomyData = {
 };
 
 // visibleIds containing all term IDs from the taxonomy fixture above.
-// Pass loading=false so the sidebar uses visibleIds to filter terms.
 const allVisible: VisibleIds = {
   ...emptyVisibleIds(),
   categoryIds: new Set(['cat-1', 'cat-2']),
   tagIds: new Set(['tag-1']),
   licenseIds: new Set(['lic-1']),
+  bundles: new Set(['image']),
 };
 
 describe('FilterSidebar', () => {
@@ -45,7 +45,6 @@ describe('FilterSidebar', () => {
     expect(screen.getByText('Category')).toBeInTheDocument();
     expect(screen.getByText('Tags')).toBeInTheDocument();
     expect(screen.getByText('License')).toBeInTheDocument();
-    // Locations is empty — should not render
     expect(screen.queryByText('Location')).not.toBeInTheDocument();
   });
 
@@ -65,9 +64,9 @@ describe('FilterSidebar', () => {
   });
 
   it('hides terms not present in visibleIds when not loading', () => {
-    const partialVisible: VisibleIds = {
+    const partial: VisibleIds = {
       ...emptyVisibleIds(),
-      categoryIds: new Set(['cat-1']), // cat-2 (Events) not visible
+      categoryIds: new Set(['cat-1']), // cat-2 not visible
       tagIds: new Set(['tag-1']),
       licenseIds: new Set(['lic-1']),
     };
@@ -75,7 +74,7 @@ describe('FilterSidebar', () => {
       <FilterSidebar
         taxonomy={taxonomy}
         filters={emptyFilters()}
-        visibleIds={partialVisible}
+        visibleIds={partial}
         loading={false}
         onFilterChange={vi.fn()}
       />,
@@ -89,7 +88,7 @@ describe('FilterSidebar', () => {
       <FilterSidebar
         taxonomy={taxonomy}
         filters={emptyFilters()}
-        visibleIds={emptyVisibleIds()} // empty — but loading=true overrides
+        visibleIds={emptyVisibleIds()}
         loading={true}
         onFilterChange={vi.fn()}
       />,
@@ -100,15 +99,12 @@ describe('FilterSidebar', () => {
 
   it('keeps a selected term visible even if not in visibleIds', () => {
     const filters = { ...emptyFilters(), categoryIds: new Set(['cat-2']) };
-    const partialVisible: VisibleIds = {
-      ...emptyVisibleIds(),
-      categoryIds: new Set(['cat-1']), // cat-2 not in visible but it is selected
-    };
+    const partial: VisibleIds = { ...emptyVisibleIds(), categoryIds: new Set(['cat-1']) };
     render(
       <FilterSidebar
         taxonomy={taxonomy}
         filters={filters}
-        visibleIds={partialVisible}
+        visibleIds={partial}
         loading={false}
         onFilterChange={vi.fn()}
       />,
@@ -127,9 +123,7 @@ describe('FilterSidebar', () => {
         onFilterChange={onChange}
       />,
     );
-
     await userEvent.click(screen.getByText('Brand Assets'));
-
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({ categoryIds: new Set(['cat-1']) }),
     );
@@ -145,11 +139,9 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={onChange}
-      />
+      />,
     );
-
     await userEvent.click(screen.getByText('Brand Assets'));
-
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({ categoryIds: new Set() }),
     );
@@ -179,7 +171,7 @@ describe('FilterSidebar', () => {
     expect(screen.getByText('Clear all')).toBeInTheDocument();
   });
 
-  it('"Clear all" resets all filter sets', async () => {
+  it('"Clear all" resets all filter sets including technical', async () => {
     const onChange = vi.fn();
     render(
       <FilterSidebar
@@ -188,23 +180,24 @@ describe('FilterSidebar', () => {
           ...emptyFilters(),
           categoryIds: new Set(['cat-1']),
           tagIds: new Set(['tag-1']),
+          orientation: new Set(['landscape']),
+          colorModel: new Set(['rgb']),
         }}
         visibleIds={allVisible}
         loading={false}
         onFilterChange={onChange}
       />,
     );
-
     await userEvent.click(screen.getByText('Clear all'));
-
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
         categoryIds: new Set(),
         tagIds: new Set(),
-        licenseIds: new Set(),
-        locationIds: new Set(),
         orientation: new Set(),
-        imageSize: new Set(),
+        colorModel: new Set(),
+        resolutionPreset: new Set(),
+        dpi: new Set(),
+        watermarked: new Set(),
         fileSize: new Set(),
       }),
     );
@@ -220,24 +213,22 @@ describe('FilterSidebar', () => {
         onFilterChange={vi.fn()}
       />,
     );
-
     expect(screen.getByText('Brand Assets')).toBeVisible();
-
-    // Click the "Category" header button to collapse
     await userEvent.click(screen.getByRole('button', { name: /category/i }));
     expect(screen.queryByText('Brand Assets')).not.toBeInTheDocument();
-
-    // Click again to expand
     await userEvent.click(screen.getByRole('button', { name: /category/i }));
     expect(screen.getByText('Brand Assets')).toBeVisible();
   });
 
-  it('shows technical filter groups when visibleIds has orientations/sizes', () => {
+  it('shows Technical section with image technical filters when metadata present', () => {
     const withTech: VisibleIds = {
       ...allVisible,
       orientations: new Set(['landscape', 'portrait']),
-      imageSizes: new Set(['large']),
-      fileSizes: new Set(['small', 'medium']),
+      colorModels: new Set(['rgb']),
+      resolutionPresets: new Set(['fhd', '4k']),
+      dpiBuckets: new Set(['web', 'print']),
+      watermarkedValues: new Set(['yes', 'no']),
+      fileSizes: new Set(['large']),
     };
     render(
       <FilterSidebar
@@ -248,14 +239,20 @@ describe('FilterSidebar', () => {
         onFilterChange={vi.fn()}
       />,
     );
+    expect(screen.getByText('Technical')).toBeInTheDocument();
     expect(screen.getByText('Orientation')).toBeInTheDocument();
     expect(screen.getByText('Landscape')).toBeInTheDocument();
     expect(screen.getByText('Portrait')).toBeInTheDocument();
     expect(screen.queryByText('Square')).not.toBeInTheDocument(); // not in visibleIds
-
-    expect(screen.getByText('Image Size')).toBeInTheDocument();
-    expect(screen.getByText('Large (> 8 MP)')).toBeInTheDocument();
-
+    expect(screen.getByText('Color Model')).toBeInTheDocument();
+    expect(screen.getByText('RGB')).toBeInTheDocument();
+    expect(screen.queryByText('CMYK')).not.toBeInTheDocument();
+    expect(screen.getByText('Resolution')).toBeInTheDocument();
+    expect(screen.getByText('Full HD (1920–3839 px)')).toBeInTheDocument();
+    expect(screen.getByText('4K+ (≥ 3840 px)')).toBeInTheDocument();
+    expect(screen.getByText('DPI')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /watermarked/i })).toBeInTheDocument();
+    expect(screen.getByText('Not watermarked')).toBeInTheDocument();
     expect(screen.getByText('File Size')).toBeInTheDocument();
   });
 
@@ -274,11 +271,30 @@ describe('FilterSidebar', () => {
         onFilterChange={onChange}
       />,
     );
-
     await userEvent.click(screen.getByText('Landscape'));
-
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({ orientation: new Set(['landscape']) }),
     );
+  });
+
+  it('shows Media Type group when bundles are present', () => {
+    const withBundles: VisibleIds = {
+      ...allVisible,
+      bundles: new Set(['image', 'video', 'audio']),
+    };
+    render(
+      <FilterSidebar
+        taxonomy={taxonomy}
+        filters={emptyFilters()}
+        visibleIds={withBundles}
+        loading={false}
+        onFilterChange={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Media Type')).toBeInTheDocument();
+    expect(screen.getByText('Image')).toBeInTheDocument();
+    expect(screen.getByText('Video')).toBeInTheDocument();
+    expect(screen.getByText('Audio')).toBeInTheDocument();
+    expect(screen.queryByText('Document')).not.toBeInTheDocument();
   });
 });

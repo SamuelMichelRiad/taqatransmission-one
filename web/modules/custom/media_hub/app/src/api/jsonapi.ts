@@ -120,7 +120,7 @@ function parseMediaItem(raw: Record<string, unknown>, fileMap: Map<string, FileE
   const captionRaw = resolveField<{ processed?: string; value?: string }>(raw, 'field_media_caption');
   const caption = captionRaw?.processed ?? captionRaw?.value ?? '';
 
-  // Primary file entry for technical metadata (dimensions, file size)
+  // File size (from primary file entity — applies to all bundles)
   const primaryEntry =
     bundle === 'image' ? imageEntry :
     bundle === 'video' ? videoFileEntry :
@@ -149,8 +149,13 @@ function parseMediaItem(raw: Record<string, unknown>, fileMap: Map<string, FileE
     themeIds: resolveRefArray(raw, 'field_media_theme').map((r) => r.id),
     created: (resolveField<string>(raw, 'created') ?? (raw['created'] as string) ?? '') as string,
     videoUrl,
-    width: bundle === 'image' ? primaryEntry?.width : undefined,
-    height: bundle === 'image' ? primaryEntry?.height : undefined,
+    // Image technical metadata — read directly from media entity fields
+    imageOrientation: resolveField<string>(raw, 'field_image_orientation') as MediaItem['imageOrientation'] ?? undefined,
+    imageColorModel: resolveField<string>(raw, 'field_image_color_model') as MediaItem['imageColorModel'] ?? undefined,
+    imageWidthPx: resolveField<number>(raw, 'field_image_width') ?? undefined,
+    imageHeightPx: resolveField<number>(raw, 'field_image_height') ?? undefined,
+    imageDpi: resolveField<number>(raw, 'field_image_resolution') ?? undefined,
+    watermarked: resolveField<boolean>(raw, 'field_media_watermarked') ?? undefined,
     filesize: primaryEntry?.filesize,
   };
 }

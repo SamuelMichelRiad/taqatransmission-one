@@ -1,5 +1,8 @@
 export type MediaBundle = 'image' | 'video' | 'document' | 'audio' | 'remote_video';
 export type Orientation = 'landscape' | 'portrait' | 'square';
+export type ColorModel = 'rgb' | 'cmyk';
+export type ResolutionPreset = 'sd' | 'hd' | 'fhd' | '4k';
+export type DpiBucket = 'web' | 'medium' | 'print';
 export type SizeBucket = 'small' | 'medium' | 'large';
 
 export interface MediaItem {
@@ -10,6 +13,7 @@ export interface MediaItem {
   fullUrl: string;
   downloadUrl: string;
   caption: string;
+  // Taxonomy IDs
   categoryIds: string[];
   tagIds: string[];
   licenseIds: string[];
@@ -23,8 +27,14 @@ export interface MediaItem {
   themeIds: string[];
   created: string;
   videoUrl: string;
-  width?: number;
-  height?: number;
+  // Image technical metadata — from dedicated media entity fields
+  imageOrientation?: Orientation;
+  imageColorModel?: ColorModel;
+  imageWidthPx?: number;
+  imageHeightPx?: number;
+  imageDpi?: number;
+  watermarked?: boolean;
+  // File metadata — from file entity, applies to all bundles
   filesize?: number;
 }
 
@@ -49,6 +59,7 @@ export interface TaxonomyData {
 
 export interface FilterState {
   search: string;
+  // Taxonomy filters — sent to server
   categoryIds: Set<string>;
   tagIds: Set<string>;
   licenseIds: Set<string>;
@@ -60,9 +71,13 @@ export interface FilterState {
   siteIds: Set<string>;
   solutionSegmentIds: Set<string>;
   themeIds: Set<string>;
-  // Applied client-side after server fetch
+  // Technical filters — applied client-side after server fetch
+  mediaType: Set<MediaBundle>;
   orientation: Set<Orientation>;
-  imageSize: Set<SizeBucket>;
+  colorModel: Set<ColorModel>;
+  resolutionPreset: Set<ResolutionPreset>;
+  dpi: Set<DpiBucket>;
+  watermarked: Set<'yes' | 'no'>;
   fileSize: Set<SizeBucket>;
 }
 
@@ -78,8 +93,13 @@ export interface VisibleIds {
   siteIds: Set<string>;
   solutionSegmentIds: Set<string>;
   themeIds: Set<string>;
+  // Technical facets
+  bundles: Set<MediaBundle>;
   orientations: Set<Orientation>;
-  imageSizes: Set<SizeBucket>;
+  colorModels: Set<ColorModel>;
+  resolutionPresets: Set<ResolutionPreset>;
+  dpiBuckets: Set<DpiBucket>;
+  watermarkedValues: Set<'yes' | 'no'>;
   fileSizes: Set<SizeBucket>;
 }
 
@@ -97,8 +117,12 @@ export function emptyFilters(): FilterState {
     siteIds: new Set(),
     solutionSegmentIds: new Set(),
     themeIds: new Set(),
+    mediaType: new Set(),
     orientation: new Set(),
-    imageSize: new Set(),
+    colorModel: new Set(),
+    resolutionPreset: new Set(),
+    dpi: new Set(),
+    watermarked: new Set(),
     fileSize: new Set(),
   };
 }
@@ -116,46 +140,41 @@ export function emptyVisibleIds(): VisibleIds {
     siteIds: new Set(),
     solutionSegmentIds: new Set(),
     themeIds: new Set(),
+    bundles: new Set(),
     orientations: new Set(),
-    imageSizes: new Set(),
+    colorModels: new Set(),
+    resolutionPresets: new Set(),
+    dpiBuckets: new Set(),
+    watermarkedValues: new Set(),
     fileSizes: new Set(),
   };
 }
 
 export function isFiltered(f: FilterState): boolean {
-  return (
-    f.search !== '' ||
-    f.categoryIds.size > 0 ||
-    f.tagIds.size > 0 ||
-    f.licenseIds.size > 0 ||
-    f.locationIds.size > 0 ||
-    f.assetTypeIds.size > 0 ||
-    f.graphicalElementIds.size > 0 ||
-    f.peopleFeaturedIds.size > 0 ||
-    f.publicationIds.size > 0 ||
-    f.siteIds.size > 0 ||
-    f.solutionSegmentIds.size > 0 ||
-    f.themeIds.size > 0 ||
-    f.orientation.size > 0 ||
-    f.imageSize.size > 0 ||
-    f.fileSize.size > 0
+  return (Object.keys(f) as Array<keyof FilterState>).some(
+    (k) => k !== 'search' && (f[k] as Set<unknown>).size > 0,
   );
 }
 
+// ---- Technical bucketing helpers ----
+
 export function itemOrientation(item: MediaItem): Orientation | null {
-  if (item.bundle !== 'image' || !item.width || !item.height) return null;
-  const ratio = item.width / item.height;
-  if (ratio > 1.05) return 'landscape';
-  if (ratio < 0.95) return 'portrait';
-  return 'square';
+  return item.imageOrientation ?? null;
 }
 
-export function itemImageSize(item: MediaItem): SizeBucket | null {
-  if (item.bundle !== 'image' || !item.width || !item.height) return null;
-  const mp = (item.width * item.height) / 1_000_000;
-  if (mp < 2) return 'small';
-  if (mp <= 8) return 'medium';
-  return 'large';
+export function itemResolutionPreset(item: MediaItem): ResolutionPreset | null {
+  if (!item.imageWidthPx) return null;
+  if (item.imageWidthPx < 1280) return 'sd';
+  if (item.imageWidthPx < 1920) return 'hd';
+  if (item.imageWidthPx < 3840) return 'fhd';
+  return '4k';
+}
+
+export function itemDpiBucket(item: MediaItem): DpiBucket | null {
+  if (!item.imageDpi) return null;
+  if (item.imageDpi <= 96) return 'web';
+  if (item.imageDpi < 300) return 'medium';
+  return 'print';
 }
 
 export function itemFileSize(item: MediaItem): SizeBucket | null {
