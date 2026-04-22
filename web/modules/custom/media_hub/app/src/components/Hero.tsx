@@ -18,7 +18,7 @@ export function Hero({ search, onSearch }: HeroProps) {
       <div className="absolute inset-y-0 right-0 w-1 bg-orange" />
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange opacity-60" />
 
-      <div className="relative w-full px-6">
+      <div className="relative w-full max-w-screen-2xl mx-auto px-6">
         {/* !important overrides any Olivero h1 colour rules */}
         <h1
           className="text-5xl font-extrabold tracking-tight mb-6"
