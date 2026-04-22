@@ -24,19 +24,31 @@
   --mh-font-body:  'Roboto', 'Segoe UI', Arial, sans-serif;
 }
 
+/* ── Full-width overrides for Olivero ──────────────────────── */
+.path-media-hub .page-wrapper {
+  max-width: 100%;
+}
+
+.path-media-hub #page {
+  max-width: 100%;
+}
+
 /* ── Page wrapper ──────────────────────────────────────────── */
 .media-hub-page {
   font-family: var(--mh-font-body);
 }
 
-/* ── Hero ──────────────────────────────────────────────────── */
+/* ── Hero — full-width bleed ───────────────────────────────── */
 .media-hub-hero {
   background: linear-gradient(135deg, var(--mh-navy) 60%, var(--mh-blue) 100%);
   position: relative;
   overflow: hidden;
-  padding: 48px 40px;
+  padding: 48px 5vw;
   margin-bottom: 28px;
-  border-radius: 6px;
+  border-radius: 0;
+  /* Break out of Olivero's content column */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 
 .media-hub-hero::after {
@@ -367,82 +379,134 @@
 #block-olivero-exposedformmedia-centerpage-1 .views-exposed-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 
-#block-olivero-exposedformmedia-centerpage-1 label {
+/* Keywords field */
+#block-olivero-exposedformmedia-centerpage-1 .form-item-keywords {
+  margin-bottom: 10px;
+}
+
+#block-olivero-exposedformmedia-centerpage-1 .form-item-keywords label {
   font-family: var(--mh-font-body);
-  font-size: 0.8rem;
-  color: #333;
+  font-size: 0.78rem;
+  color: #555;
+  display: block;
+  margin-bottom: 4px;
 }
 
-/* Filter group wrapper — added by JS */
-.mh-filter-group {
+#block-olivero-exposedformmedia-centerpage-1 .form-item-keywords input {
+  width: 100%;
+  border: 1px solid var(--mh-border);
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 0.85rem;
+  font-family: var(--mh-font-body);
+  box-sizing: border-box;
+}
+
+/* ── Filter groups — style the BEF fieldsets directly ──────── */
+.mh-fieldset-group {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 0 6px !important;
   border-radius: 4px;
   overflow: hidden;
 }
 
-.mh-filter-group__header {
-  font-family: var(--mh-font-head);
-  display: flex;
+/* Legend = collapsible header */
+.mh-fieldset-group > legend {
+  font-family: var(--mh-font-head) !important;
+  display: flex !important;
   align-items: center;
   justify-content: space-between;
-  background: var(--mh-navy);
-  color: var(--mh-white);
-  padding: 10px 14px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  background: var(--mh-navy) !important;
+  color: var(--mh-white) !important;
+  padding: 10px 14px !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
   cursor: pointer;
   user-select: none;
-  border: none;
-  width: 100%;
-  text-align: left;
+  width: 100% !important;
+  box-sizing: border-box;
+  float: none !important;
 }
 
-.mh-filter-group__chevron {
-  color: var(--mh-blue);
-  font-size: 0.7rem;
-  transition: transform 0.2s;
-}
-
-.mh-filter-group--collapsed .mh-filter-group__chevron {
-  transform: rotate(-90deg);
-}
-
-.mh-filter-group__body {
+/* Fieldset body */
+.mh-fieldset-group > .fieldset-wrapper {
   background: var(--mh-white);
   padding: 10px 14px;
   border: 1px solid var(--mh-border);
   border-top: none;
 }
 
-.mh-filter-group--collapsed .mh-filter-group__body {
+.mh-fieldset-group--collapsed > .fieldset-wrapper {
   display: none;
 }
 
-/* Tag pills */
+.mh-filter-group__chevron {
+  color: var(--mh-blue);
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  margin-left: auto;
+  padding-left: 8px;
+  flex-shrink: 0;
+}
+
+.mh-fieldset-group--collapsed .mh-filter-group__chevron {
+  transform: rotate(-90deg);
+}
+
+/* "More Filters" separator heading */
+.mh-more-filters-heading {
+  font-family: var(--mh-font-head);
+  font-size: 0.72rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 4px 4px;
+  margin-top: 6px;
+}
+
+/* ── Checkbox brand styling ─────────────────────────────────── */
+#block-olivero-exposedformmedia-centerpage-1 label {
+  font-family: var(--mh-font-body);
+  font-size: 0.8rem;
+  color: #333;
+}
+
+#block-olivero-exposedformmedia-centerpage-1 .form-checkbox {
+  accent-color: var(--mh-blue);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+#block-olivero-exposedformmedia-centerpage-1 .form-type-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+}
+
+#block-olivero-exposedformmedia-centerpage-1 .form-type-checkbox label {
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+#block-olivero-exposedformmedia-centerpage-1 .form-type-checkbox input {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/* Tag pills (used in lightbox sidebar clone) */
 .mh-filter-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-}
-
-.mh-filter-pill {
-  font-family: var(--mh-font-body);
-  background: #eef4fb;
-  border: 1px solid #c5dcf0;
-  border-radius: 3px;
-  padding: 3px 8px;
-  font-size: 0.72rem;
-  color: var(--mh-navy);
-  cursor: pointer;
-}
-
-.mh-filter-pill.is-active {
-  background: var(--mh-blue);
-  color: var(--mh-white);
-  border-color: var(--mh-blue);
 }
 
 /* Reset link */

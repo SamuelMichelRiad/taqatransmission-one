@@ -54,68 +54,60 @@
   }
 
   // ── Filter group collapsibles ───────────────────────────────
+  // The BEF/facets form renders each filter group as a <fieldset class="fieldset--group">.
+  // We add collapse behaviour by toggling a CSS class on the fieldset.
+
+  const MORE_FILTER_SELECTORS = ['edit-location', 'edit-theme', 'edit-solution-segment', 'edit-people-featured', 'edit-asset-type'];
 
   function wrapFilterGroups(container) {
     if (!container) return;
 
-    FILTER_GROUPS.forEach(function (group) {
-      const identifiers = Object.keys(FILTER_PARAM_MAP).filter(function (k) {
-        return FILTER_PARAM_MAP[k] === group.id || k === group.id;
-      });
+    const fieldsets = container.querySelectorAll('fieldset.fieldset--group');
+    if (!fieldsets.length) return;
 
-      const inputs = [];
-      identifiers.forEach(function (id) {
-        container.querySelectorAll('[name*="' + id + '"], [id*="' + id + '"]').forEach(function (el) {
-          inputs.push(el);
-        });
-      });
+    // Insert "More Filters" heading before first "more" fieldset
+    let moreHeadingInserted = false;
 
-      if (inputs.length === 0) return;
+    fieldsets.forEach(function (fs) {
+      const selector = fs.getAttribute('data-drupal-selector') || '';
+      const isMore = MORE_FILTER_SELECTORS.some(function (s) { return selector.startsWith(s); });
 
-      const items = new Set();
-      inputs.forEach(function (input) {
-        const item = input.closest('.js-form-item, .form-item, .js-form-wrapper, .form-wrapper');
-        if (item) items.add(item);
-      });
-
-      if (items.size === 0) return;
-
-      const wrapper = document.createElement('div');
-      wrapper.className = 'mh-filter-group' + (group.collapsed ? ' mh-filter-group--collapsed' : '');
-      wrapper.dataset.groupId = group.id;
-
-      const header = document.createElement('button');
-      header.type = 'button';
-      header.className = 'mh-filter-group__header';
-      header.innerHTML = Drupal.t(group.label) + '<span class="mh-filter-group__chevron" aria-hidden="true">&#9660;</span>';
-      header.addEventListener('click', function () {
-        wrapper.classList.toggle('mh-filter-group--collapsed');
-      });
-
-      const body = document.createElement('div');
-      body.className = 'mh-filter-group__body';
-
-      items.forEach(function (item) {
-        body.appendChild(item);
-      });
-
-      if (group.id === 'tags' || group.id === 'more') {
-        const reset = document.createElement('button');
-        reset.type = 'button';
-        reset.className = 'mh-filter-reset';
-        reset.textContent = Drupal.t('Reset');
-        reset.addEventListener('click', function () {
-          clearGroupFilters(group.id);
-        });
-        body.appendChild(reset);
+      fs.classList.add('mh-fieldset-group');
+      if (isMore) {
+        fs.classList.add('mh-fieldset-group--collapsed');
+        if (!moreHeadingInserted) {
+          const heading = document.createElement('div');
+          heading.className = 'mh-more-filters-heading';
+          heading.textContent = Drupal.t('More Filters');
+          fs.parentNode.insertBefore(heading, fs);
+          moreHeadingInserted = true;
+        }
       }
 
-      wrapper.appendChild(header);
-      wrapper.appendChild(body);
+      // Add chevron to legend and wire up toggle
+      const legend = fs.querySelector('legend');
+      if (legend && !legend.querySelector('.mh-filter-group__chevron')) {
+        const chevron = document.createElement('span');
+        chevron.className = 'mh-filter-group__chevron';
+        chevron.setAttribute('aria-hidden', 'true');
+        chevron.innerHTML = '&#9660;';
+        legend.appendChild(chevron);
+        legend.addEventListener('click', function () {
+          fs.classList.toggle('mh-fieldset-group--collapsed');
+        });
+      }
 
-      const firstItem = Array.from(items)[0];
-      if (firstItem.parentNode) {
-        firstItem.parentNode.insertBefore(wrapper, firstItem);
+      // Add Reset button to tags group
+      if (selector.startsWith('edit-tags')) {
+        const wrapper = fs.querySelector('.fieldset-wrapper') || fs;
+        if (!wrapper.querySelector('.mh-filter-reset')) {
+          const reset = document.createElement('button');
+          reset.type = 'button';
+          reset.className = 'mh-filter-reset';
+          reset.textContent = Drupal.t('Reset');
+          reset.addEventListener('click', function () { clearGroupFilters('tags'); });
+          wrapper.appendChild(reset);
+        }
       }
     });
   }
