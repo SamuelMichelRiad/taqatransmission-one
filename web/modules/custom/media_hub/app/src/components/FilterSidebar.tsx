@@ -53,11 +53,7 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
                   onClick={() => onToggle(term.id)}
                 >
                   {checked && (
-                    <svg
-                      className="w-2.5 h-2.5 text-white"
-                      viewBox="0 0 10 8"
-                      fill="none"
-                    >
+                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 8" fill="none">
                       <path
                         d="M1 4l3 3 5-6"
                         stroke="currentColor"
@@ -90,19 +86,32 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
   );
 }
 
+type IdFilterKey = keyof Pick<
+  FilterState,
+  | 'categoryIds'
+  | 'tagIds'
+  | 'licenseIds'
+  | 'locationIds'
+  | 'assetTypeIds'
+  | 'graphicalElementIds'
+  | 'peopleFeaturedIds'
+  | 'publicationIds'
+  | 'siteIds'
+  | 'solutionSegmentIds'
+  | 'themeIds'
+>;
+
 export function FilterSidebar({ taxonomy, filters, onFilterChange }: FilterSidebarProps) {
-  function toggle(field: keyof Pick<FilterState, 'categoryIds' | 'tagIds' | 'licenseIds' | 'locationIds'>, id: string) {
+  function toggle(field: IdFilterKey, id: string) {
     const current = new Set(filters[field]);
     if (current.has(id)) current.delete(id);
     else current.add(id);
     onFilterChange({ ...filters, [field]: current });
   }
 
-  const hasFilters =
-    filters.categoryIds.size > 0 ||
-    filters.tagIds.size > 0 ||
-    filters.licenseIds.size > 0 ||
-    filters.locationIds.size > 0;
+  const hasFilters = (Object.keys(filters) as Array<keyof FilterState>).some(
+    (k) => k !== 'search' && (filters[k] as Set<string>).size > 0,
+  );
 
   function clearAll() {
     onFilterChange({
@@ -111,15 +120,20 @@ export function FilterSidebar({ taxonomy, filters, onFilterChange }: FilterSideb
       tagIds: new Set(),
       licenseIds: new Set(),
       locationIds: new Set(),
+      assetTypeIds: new Set(),
+      graphicalElementIds: new Set(),
+      peopleFeaturedIds: new Set(),
+      publicationIds: new Set(),
+      siteIds: new Set(),
+      solutionSegmentIds: new Set(),
+      themeIds: new Set(),
     });
   }
 
   return (
     <aside className="w-60 shrink-0 bg-navy self-start sticky top-4 rounded-lg overflow-hidden shadow-lg">
       <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
-        <span className="text-white font-bold text-sm uppercase tracking-wider">
-          Filters
-        </span>
+        <span className="text-white font-bold text-sm uppercase tracking-wider">Filters</span>
         {hasFilters && (
           <button
             type="button"
@@ -131,13 +145,53 @@ export function FilterSidebar({ taxonomy, filters, onFilterChange }: FilterSideb
         )}
       </div>
 
-
-
       <FilterGroup
         label="Category"
         terms={taxonomy.categories}
         selected={filters.categoryIds}
         onToggle={(id) => toggle('categoryIds', id)}
+      />
+      <FilterGroup
+        label="Asset Type"
+        terms={taxonomy.assetTypes}
+        selected={filters.assetTypeIds}
+        onToggle={(id) => toggle('assetTypeIds', id)}
+      />
+      <FilterGroup
+        label="Theme"
+        terms={taxonomy.themes}
+        selected={filters.themeIds}
+        onToggle={(id) => toggle('themeIds', id)}
+      />
+      <FilterGroup
+        label="People"
+        terms={taxonomy.peopleFeatured}
+        selected={filters.peopleFeaturedIds}
+        onToggle={(id) => toggle('peopleFeaturedIds', id)}
+      />
+      <FilterGroup
+        label="Site"
+        terms={taxonomy.sites}
+        selected={filters.siteIds}
+        onToggle={(id) => toggle('siteIds', id)}
+      />
+      <FilterGroup
+        label="Solution Segment"
+        terms={taxonomy.solutionSegments}
+        selected={filters.solutionSegmentIds}
+        onToggle={(id) => toggle('solutionSegmentIds', id)}
+      />
+      <FilterGroup
+        label="Publication"
+        terms={taxonomy.publications}
+        selected={filters.publicationIds}
+        onToggle={(id) => toggle('publicationIds', id)}
+      />
+      <FilterGroup
+        label="Graphical Element"
+        terms={taxonomy.graphicalElements}
+        selected={filters.graphicalElementIds}
+        onToggle={(id) => toggle('graphicalElementIds', id)}
       />
       <FilterGroup
         label="License"

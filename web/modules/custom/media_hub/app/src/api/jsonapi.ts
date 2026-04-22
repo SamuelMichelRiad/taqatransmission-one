@@ -129,10 +129,17 @@ export function buildFilterParams(filters: FilterState): URLSearchParams {
     p.set('filter[search][condition][value]', filters.search.trim());
   }
 
-  appendIdsFilter(p, 'cats', 'field_media_category.id', filters.categoryIds);
-  appendIdsFilter(p, 'tags', 'field_media_tags.id', filters.tagIds);
-  appendIdsFilter(p, 'lic', 'field_media_license.id', filters.licenseIds);
-  appendIdsFilter(p, 'loc', 'field_media_location.id', filters.locationIds);
+  appendIdsFilter(p, 'cats',   'field_media_category.id',        filters.categoryIds);
+  appendIdsFilter(p, 'tags',   'field_media_tags.id',             filters.tagIds);
+  appendIdsFilter(p, 'lic',    'field_media_license.id',          filters.licenseIds);
+  appendIdsFilter(p, 'loc',    'field_media_location.id',         filters.locationIds);
+  appendIdsFilter(p, 'astype', 'field_media_asset_type.id',       filters.assetTypeIds);
+  appendIdsFilter(p, 'gfx',    'field_image_graphical_element.id',filters.graphicalElementIds);
+  appendIdsFilter(p, 'ppl',    'field_media_people_featured.id',  filters.peopleFeaturedIds);
+  appendIdsFilter(p, 'pub',    'field_media_publication.id',      filters.publicationIds);
+  appendIdsFilter(p, 'site',   'field_media_site.id',             filters.siteIds);
+  appendIdsFilter(p, 'seg',    'field_media_solution_segment.id', filters.solutionSegmentIds);
+  appendIdsFilter(p, 'theme',  'field_media_theme.id',            filters.themeIds);
 
   return p;
 }

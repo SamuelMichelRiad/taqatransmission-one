@@ -13,6 +13,13 @@ const taxonomy: TaxonomyData = {
   tags: [{ id: 'tag-1', name: 'CEO' }],
   licenses: [{ id: 'lic-1', name: 'Public' }],
   locations: [],
+  assetTypes: [],
+  graphicalElements: [],
+  peopleFeatured: [],
+  publications: [],
+  sites: [],
+  solutionSegments: [],
+  themes: [],
 };
 
 describe('FilterSidebar', () => {

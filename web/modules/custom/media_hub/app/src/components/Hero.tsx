@@ -6,11 +6,12 @@ interface HeroProps {
 export function Hero({ search, onSearch }: HeroProps) {
   return (
     <div
-      className="w-full text-white relative overflow-hidden"
+      className="w-full text-white relative overflow-hidden flex items-center"
       style={{
         backgroundImage: 'url(/modules/custom/media_hub/media-hub-banner.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        aspectRatio: '1920 / 549',
       }}
     >
       {/* Dark overlay so text stays readable over the photo */}
@@ -18,14 +19,12 @@ export function Hero({ search, onSearch }: HeroProps) {
       <div className="absolute inset-y-0 right-0 w-1 bg-orange" />
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange opacity-60" />
 
-      <div className="relative max-w-4xl mx-auto px-6 py-14 text-center">
-        <p className="text-orange text-xs font-bold tracking-[0.25em] uppercase mb-3">
-          Taqa Transmission
-        </p>
-        <h1 className="text-5xl font-extrabold tracking-tight mb-8">MEDIA HUB</h1>
+      {/* Content aligned with the main layout container */}
+      <div className="relative w-full max-w-screen-2xl mx-auto px-6">
+        <h1 className="text-5xl font-extrabold tracking-tight text-white mb-6">MEDIA HUB</h1>
 
-        <div className="relative max-w-xl mx-auto">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 text-lg select-none">
+        <div className="relative max-w-2xl">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-lg select-none pointer-events-none">
             &#128269;
           </span>
           <input
