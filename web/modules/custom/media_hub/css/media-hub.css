@@ -25,12 +25,15 @@
 }
 
 /* ── Full-width overrides for Olivero ──────────────────────── */
-.path-media-hub .page-wrapper {
+.path-media-hub .page-wrapper,
+.path-media-hub #page {
   max-width: 100%;
 }
 
-.path-media-hub #page {
-  max-width: 100%;
+/* Stretch the sidebar-grid to full width */
+.path-media-hub .sidebar-grid {
+  max-width: 100% !important;
+  width: 100% !important;
 }
 
 /* ── Page wrapper ──────────────────────────────────────────── */
@@ -38,17 +41,14 @@
   font-family: var(--mh-font-body);
 }
 
-/* ── Hero — full-width bleed ───────────────────────────────── */
+/* ── Hero ──────────────────────────────────────────────────── */
 .media-hub-hero {
   background: linear-gradient(135deg, var(--mh-navy) 60%, var(--mh-blue) 100%);
   position: relative;
   overflow: hidden;
-  padding: 48px 5vw;
+  padding: 48px 40px;
   margin-bottom: 28px;
   border-radius: 0;
-  /* Break out of Olivero's content column */
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
 }
 
 .media-hub-hero::after {
@@ -406,7 +406,11 @@
 }
 
 /* ── Filter groups — style the BEF fieldsets directly ──────── */
+/* Use display:flex to override browser fieldset/legend quirks
+   (Olivero floats the legend which causes white-box artefacts) */
 .mh-fieldset-group {
+  display: flex !important;
+  flex-direction: column !important;
   border: none !important;
   padding: 0 !important;
   margin: 0 0 6px !important;
@@ -429,20 +433,28 @@
   cursor: pointer;
   user-select: none;
   width: 100% !important;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
   float: none !important;
+  order: 0;
 }
 
-/* Fieldset body */
-.mh-fieldset-group > .fieldset-wrapper {
+/* Fieldset body — note double-underscore BEM class */
+.mh-fieldset-group > .fieldset__wrapper {
   background: var(--mh-white);
   padding: 10px 14px;
-  border: 1px solid var(--mh-border);
-  border-top: none;
+  border: 1px solid var(--mh-border) !important;
+  border-top: none !important;
+  order: 1;
 }
 
-.mh-fieldset-group--collapsed > .fieldset-wrapper {
-  display: none;
+/* Override Olivero's gray border on the wrapper */
+.fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
+  border-color: var(--mh-border) !important;
+  border-radius: 0 !important;
+}
+
+.mh-fieldset-group--collapsed > .fieldset__wrapper {
+  display: none !important;
 }
 
 .mh-filter-group__chevron {
