@@ -96,14 +96,22 @@ function parseMediaItem(
   };
 }
 
-const MEDIA_BUNDLES = ['image', 'video', 'document', 'audio', 'remote_video'] as const;
+const BUNDLE_INCLUDES: Record<string, string> = {
+  image: 'thumbnail,field_media_image',
+  video: 'thumbnail,field_media_video_file',
+  remote_video: 'thumbnail',
+  document: 'thumbnail,field_media_document,field_media_file',
+  audio: 'thumbnail,field_media_audio_file,field_media_file',
+};
+
+const MEDIA_BUNDLES = Object.keys(BUNDLE_INCLUDES) as Array<keyof typeof BUNDLE_INCLUDES>;
 
 export async function fetchAllMedia(): Promise<MediaItem[]> {
   const allItems: MediaItem[] = [];
 
   await Promise.all(
     MEDIA_BUNDLES.map(async (bundle) => {
-      const includes = 'thumbnail,field_media_image,field_media_video_file';
+      const includes = BUNDLE_INCLUDES[bundle];
       let url: string | null =
         api(`media/${bundle}`) +
         `?include=${includes}&page[limit]=100&sort=-created`;
