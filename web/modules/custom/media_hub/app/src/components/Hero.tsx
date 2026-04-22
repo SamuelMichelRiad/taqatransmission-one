@@ -7,12 +7,18 @@ export function Hero({ search, onSearch }: HeroProps) {
   return (
     <div
       className="w-full text-white relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #00093f 0%, #0a1a6e 100%)' }}
+      style={{
+        backgroundImage: 'url(/modules/custom/media_hub/media-hub-banner.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
+      {/* Dark overlay so text stays readable over the photo */}
+      <div className="absolute inset-0 bg-navy/70" />
       <div className="absolute inset-y-0 right-0 w-1 bg-orange" />
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange opacity-60" />
 
-      <div className="max-w-4xl mx-auto px-6 py-14 text-center">
+      <div className="relative max-w-4xl mx-auto px-6 py-14 text-center">
         <p className="text-orange text-xs font-bold tracking-[0.25em] uppercase mb-3">
           Taqa Transmission
         </p>
