@@ -1,0 +1,5 @@
+{"type":"server-started","port":50801,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:50801","screen_dir":"/Users/samuel/Documents/GitHub/taqatransmission-one/.superpowers/brainstorm/84736-1776764832/content","state_dir":"/Users/samuel/Documents/GitHub/taqatransmission-one/.superpowers/brainstorm/84736-1776764832/state"}
+{"type":"screen-added","file":"/Users/samuel/Documents/GitHub/taqatransmission-one/.superpowers/brainstorm/84736-1776764832/content/page-layout.html"}
+{"type":"screen-added","file":"/Users/samuel/Documents/GitHub/taqatransmission-one/.superpowers/brainstorm/84736-1776764832/content/lightbox-popup.html"}
+{"type":"screen-added","file":"/Users/samuel/Documents/GitHub/taqatransmission-one/.superpowers/brainstorm/84736-1776764832/content/waiting.html"}
+{"type":"server-stopped","reason":"idle timeout"}

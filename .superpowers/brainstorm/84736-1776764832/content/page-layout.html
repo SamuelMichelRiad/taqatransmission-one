@@ -1,0 +1,235 @@
+<style>
+  :root {
+    --navy: rgb(0,9,63);
+    --orange: rgb(255,95,0);
+    --lightblue: rgb(8,158,209);
+    --gray: #f4f5f7;
+    --border: #dde1e9;
+    --text: #1a1a2e;
+  }
+  body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
+  .page-wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 60%, var(--lightblue) 100%);
+    border-radius: 8px;
+    padding: 48px 40px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 100%;
+    background: var(--orange);
+    clip-path: polygon(40% 0, 100% 0, 100% 100%, 0% 100%);
+    opacity: 0.85;
+  }
+  .hero h1 { color: white; font-size: 2.4rem; font-weight: 800; margin: 0 0 8px; letter-spacing: 2px; position: relative; z-index: 1; }
+  .hero-search {
+    display: flex; align-items: center;
+    background: white; border-radius: 4px;
+    padding: 10px 16px; max-width: 480px;
+    margin-top: 20px; position: relative; z-index: 1;
+  }
+  .hero-search span { color: #888; margin-right: 10px; font-size: 1rem; }
+  .hero-search input { border: none; outline: none; font-size: 0.95rem; width: 100%; color: #333; }
+
+  /* Quick Access */
+  .section-title { color: var(--orange); font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 14px; }
+  .quick-access { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+  .qa-card {
+    border-radius: 6px; overflow: hidden; position: relative; height: 100px;
+    cursor: pointer; background: var(--navy);
+  }
+  .qa-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+  .qa-card .qa-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,9,63,0.7);
+    color: white; font-weight: 700; font-size: 0.85rem;
+    text-align: center; padding: 8px; letter-spacing: 1px;
+  }
+
+  /* Main layout */
+  .main-layout { display: grid; grid-template-columns: 1fr 260px; gap: 24px; }
+
+  /* Gallery */
+  .gallery-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .result-count { color: #666; font-size: 0.85rem; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .thumb {
+    border-radius: 4px; overflow: hidden; position: relative;
+    background: var(--navy); aspect-ratio: 1;
+  }
+  .thumb-img { width: 100%; height: 100%; background: linear-gradient(135deg, #1a2a6c, #2d4a8a); }
+  .thumb-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,9,63,0.55);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s;
+    padding: 8px;
+  }
+  .thumb:hover .thumb-overlay { opacity: 1; }
+  .thumb-title { color: white; font-size: 0.65rem; font-weight: 600; text-align: center; margin-bottom: 6px; }
+  .thumb-dl { background: var(--orange); color: white; border: none; border-radius: 3px; padding: 3px 8px; font-size: 0.6rem; cursor: pointer; }
+
+  /* Pagination */
+  .pagination { display: flex; align-items: center; gap: 6px; margin-top: 16px; }
+  .page-btn { width: 28px; height: 28px; border-radius: 4px; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; cursor: pointer; color: var(--text); }
+  .page-btn.active { background: var(--lightblue); color: white; border-color: var(--lightblue); }
+  .page-btn.text { width: auto; padding: 0 8px; }
+
+  /* Sidebar */
+  .sidebar {}
+  .filter-group { background: white; border-radius: 6px; margin-bottom: 10px; overflow: hidden; }
+  .filter-header {
+    background: var(--navy); color: white;
+    padding: 10px 14px; font-size: 0.85rem; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; letter-spacing: 0.5px;
+  }
+  .filter-header .chevron { font-size: 0.7rem; color: var(--lightblue); }
+  .filter-body { padding: 12px 14px; }
+  .filter-options { display: flex; flex-direction: column; gap: 6px; }
+  .filter-opt { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #333; }
+  .filter-opt input[type=radio] { accent-color: var(--lightblue); }
+  .filter-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-tag { background: #eef4fb; border: 1px solid #c5dcf0; border-radius: 3px; padding: 3px 8px; font-size: 0.72rem; color: var(--navy); cursor: pointer; }
+  .filter-tag.active { background: var(--lightblue); color: white; border-color: var(--lightblue); }
+  .reset-link { color: var(--lightblue); font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: right; display: block; margin-top: 4px; }
+
+  /* Active chips */
+  .active-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip { background: var(--lightblue); color: white; border-radius: 20px; padding: 3px 10px; font-size: 0.75rem; display: flex; align-items: center; gap: 5px; }
+  .chip-x { cursor: pointer; font-size: 0.8rem; }
+</style>
+
+<h2>Media Hub — Proposed Page Layout</h2>
+<p class="subtitle">Scroll down to see the full structure. Hover over thumbnails to see the overlay effect.</p>
+
+<div class="page-wrap">
+
+  <!-- Hero Banner -->
+  <div class="hero">
+    <h1>MEDIA HUB</h1>
+    <div class="hero-search">
+      <span>🔍</span>
+      <input placeholder="Search media...">
+    </div>
+  </div>
+
+  <!-- Quick Access -->
+  <div class="section-title">Quick Access</div>
+  <div class="quick-access">
+    <div class="qa-card"><div class="thumb-img"></div><div class="qa-label">ASSETS</div></div>
+    <div class="qa-card"><div class="thumb-img" style="background:linear-gradient(135deg,#1a3a6c,#2d5a9a)"></div><div class="qa-label">EVENTS</div></div>
+    <div class="qa-card"><div class="thumb-img" style="background:linear-gradient(135deg,#2a1a6c,#4d3a9a)"></div><div class="qa-label">PEOPLE</div></div>
+    <div class="qa-card"><div class="thumb-img" style="background:linear-gradient(135deg,#6c1a1a,#9a3d2d)"></div><div class="qa-label">VIDEOS</div></div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="main-layout">
+
+    <!-- Gallery -->
+    <div>
+      <div class="gallery-header">
+        <div class="section-title" style="margin:0">Gallery</div>
+        <span class="result-count">142 results</span>
+      </div>
+
+      <!-- Active filter chips -->
+      <div class="active-chips">
+        <div class="chip">Assets <span class="chip-x">×</span></div>
+        <div class="chip">IMAGE <span class="chip-x">×</span></div>
+        <div class="chip">CFO <span class="chip-x">×</span></div>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="thumb"><div class="thumb-img"></div><div class="thumb-overlay"><div class="thumb-title">National Day Celebration</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#1a3a6c,#2d5a9a)"></div><div class="thumb-overlay"><div class="thumb-title">Annual Conference</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#162050,#223070)"></div><div class="thumb-overlay"><div class="thumb-title">CFO Press Event</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#0d2545,#1a3a6c)"></div><div class="thumb-overlay"><div class="thumb-title">Water Facility</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#1a2a6c,#2d4a8a)"></div><div class="thumb-overlay"><div class="thumb-title">Staff Training</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#0a1a50,#162a7a)"></div><div class="thumb-overlay"><div class="thumb-title">Executive Meeting</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#2a1a6c,#4d3a9a)"></div><div class="thumb-overlay"><div class="thumb-title">Awards Ceremony</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#1a3a6c,#2d5a9a)"></div><div class="thumb-overlay"><div class="thumb-title">CEO Visit</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img"></div><div class="thumb-overlay"><div class="thumb-title">Seminar 2024</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#162050,#223070)"></div><div class="thumb-overlay"><div class="thumb-title">HSE Initiative</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#0d2545,#1a3a6c)"></div><div class="thumb-overlay"><div class="thumb-title">WUC Expansion</div><button class="thumb-dl">↓ Download</button></div></div>
+        <div class="thumb"><div class="thumb-img" style="background:linear-gradient(135deg,#0a1a50,#162a7a)"></div><div class="thumb-overlay"><div class="thumb-title">Power Division</div><button class="thumb-dl">↓ Download</button></div></div>
+      </div>
+
+      <div class="pagination">
+        <div class="page-btn">«</div>
+        <div class="page-btn active">1</div>
+        <div class="page-btn">2</div>
+        <div class="page-btn">3</div>
+        <div class="page-btn text">»</div>
+        <div class="page-btn text">›|</div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="filter-group">
+        <div class="filter-header">Category <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-options">
+            <label class="filter-opt"><input type="radio" name="cat"> People</label>
+            <label class="filter-opt"><input type="radio" name="cat" checked> Events</label>
+            <label class="filter-opt"><input type="radio" name="cat"> Assets</label>
+            <label class="filter-opt"><input type="radio" name="cat"> Press Release</label>
+          </div>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-header">License &amp; Usage <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-options">
+            <label class="filter-opt"><input type="radio" name="lic"> Internal</label>
+            <label class="filter-opt"><input type="radio" name="lic" checked> External</label>
+            <label class="filter-opt"><input type="radio" name="lic"> Public</label>
+            <label class="filter-opt"><input type="radio" name="lic"> Editorial</label>
+          </div>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-header">Media Type <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-options">
+            <label class="filter-opt"><input type="radio" name="type" checked> IMAGE</label>
+            <label class="filter-opt"><input type="radio" name="type"> VIDEO</label>
+            <label class="filter-opt"><input type="radio" name="type"> DOCUMENT</label>
+            <label class="filter-opt"><input type="radio" name="type"> JPEG</label>
+            <label class="filter-opt"><input type="radio" name="type"> PNG</label>
+            <label class="filter-opt"><input type="radio" name="type"> PPT</label>
+          </div>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-header">Tags <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-tags">
+            <div class="filter-tag">CEO</div>
+            <div class="filter-tag active">CFO</div>
+            <div class="filter-tag">National Day</div>
+            <div class="filter-tag">Staff</div>
+            <div class="filter-tag">Water</div>
+            <div class="filter-tag">Power</div>
+            <div class="filter-tag">Training</div>
+            <div class="filter-tag">HSE</div>
+            <div class="filter-tag">WUC</div>
+            <div class="filter-tag">Coms</div>
+            <div class="filter-tag">Awards</div>
+          </div>
+          <a class="reset-link">Reset</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

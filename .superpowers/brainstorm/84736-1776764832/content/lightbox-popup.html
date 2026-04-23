@@ -1,0 +1,311 @@
+<style>
+  :root {
+    --navy: rgb(0,9,63);
+    --orange: rgb(255,95,0);
+    --lightblue: rgb(8,158,209);
+    --border: #dde1e9;
+  }
+  body { background: #1a1a2e; font-family: 'Segoe UI', sans-serif; }
+
+  .popup-wrap {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    min-height: 100vh;
+    background: rgba(0,9,63,0.97);
+  }
+
+  /* Left: image area */
+  .popup-left {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+  }
+  .popup-top-bar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 20px 0;
+  }
+  .close-btn {
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .close-btn span { color: var(--lightblue); }
+
+  .image-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 24px 48px;
+  }
+  .image-placeholder {
+    width: 100%;
+    max-height: 420px;
+    background: linear-gradient(135deg, #1a2a6c 0%, #2d4a8a 50%, #1a3a6c 100%);
+    border-radius: 4px;
+    aspect-ratio: 16/10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.2);
+    font-size: 3rem;
+  }
+  .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-arrow.left { left: 12px; }
+  .nav-arrow.right { right: 12px; }
+
+  .popup-caption-bar {
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .caption-text {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .download-btn {
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .related-section {
+    padding: 16px 48px 24px;
+  }
+  .related-title {
+    color: var(--orange);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .related-thumbs {
+    display: flex;
+    gap: 10px;
+  }
+  .related-thumb {
+    width: 80px;
+    height: 60px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #1a2a6c, #2d4a8a);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .related-thumb:hover { border-color: var(--lightblue); }
+
+  /* Right: sidebar */
+  .popup-sidebar {
+    background: rgba(0,0,0,0.25);
+    border-left: 1px solid rgba(255,255,255,0.08);
+    padding: 16px;
+    overflow-y: auto;
+  }
+  .sidebar-search {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 14px;
+    gap: 8px;
+  }
+  .sidebar-search span { color: rgba(255,255,255,0.5); }
+  .sidebar-search input {
+    background: none;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+  .sidebar-search input::placeholder { color: rgba(255,255,255,0.4); }
+
+  .filter-group { margin-bottom: 8px; border-radius: 4px; overflow: hidden; }
+  .filter-header {
+    background: var(--navy);
+    border: 1px solid rgba(8,158,209,0.3);
+    color: white;
+    padding: 9px 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+  .filter-header .chevron { color: var(--lightblue); font-size: 0.65rem; }
+  .filter-body {
+    background: rgba(255,255,255,0.05);
+    padding: 10px 12px;
+  }
+  .filter-options { display: flex; flex-direction: column; gap: 6px; }
+  .filter-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+  }
+  .filter-opt input[type=radio] { accent-color: var(--lightblue); }
+  .filter-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .filter-tag {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 3px;
+    padding: 3px 7px;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+  }
+  .filter-tag.active {
+    background: var(--lightblue);
+    color: white;
+    border-color: var(--lightblue);
+  }
+  .reset-link {
+    color: var(--lightblue);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: block;
+    margin-top: 8px;
+    text-align: right;
+  }
+</style>
+
+<h2>Lightbox Popup — Proposed Design</h2>
+<p class="subtitle">Full-screen overlay when a thumbnail is clicked. Filters stay accessible on the right.</p>
+
+<div class="mockup" style="padding:0;overflow:hidden;border-radius:8px;">
+  <div class="popup-wrap">
+
+    <!-- Left: image + caption + related -->
+    <div class="popup-left">
+      <div class="popup-top-bar">
+        <button class="close-btn">CLOSE <span>✕</span></button>
+      </div>
+
+      <div class="image-stage">
+        <button class="nav-arrow left">‹</button>
+        <div class="image-placeholder">🖼</div>
+        <button class="nav-arrow right">›</button>
+      </div>
+
+      <div class="popup-caption-bar">
+        <span class="caption-text">Sample image caption that doesn't exceed thirty characters.</span>
+        <button class="download-btn">Download ↓</button>
+      </div>
+
+      <div class="related-section">
+        <div class="related-title">Related Images</div>
+        <div class="related-thumbs">
+          <div class="related-thumb"></div>
+          <div class="related-thumb" style="background:linear-gradient(135deg,#1a3a6c,#2d5a9a)"></div>
+          <div class="related-thumb" style="background:linear-gradient(135deg,#2a1a6c,#4d3a9a)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: sidebar with filters -->
+    <div class="popup-sidebar">
+      <div class="sidebar-search">
+        <span>🔍</span>
+        <input placeholder="Search media...">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-header">Category <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-options">
+            <label class="filter-opt"><input type="radio" name="cat2"> People</label>
+            <label class="filter-opt"><input type="radio" name="cat2" checked> Assets</label>
+            <label class="filter-opt"><input type="radio" name="cat2"> Events</label>
+            <label class="filter-opt"><input type="radio" name="cat2"> Press Release</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-header">License &amp; Usage <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-options">
+            <label class="filter-opt"><input type="radio" name="lic2"> Internal</label>
+            <label class="filter-opt"><input type="radio" name="lic2" checked> External</label>
+            <label class="filter-opt"><input type="radio" name="lic2"> Public</label>
+            <label class="filter-opt"><input type="radio" name="lic2"> Editorial</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-header">Media Type <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-options">
+            <label class="filter-opt"><input type="radio" name="type2" checked> IMAGE</label>
+            <label class="filter-opt"><input type="radio" name="type2"> VIDEO</label>
+            <label class="filter-opt"><input type="radio" name="type2"> DOCUMENT</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-header">Tags <span class="chevron">▼</span></div>
+        <div class="filter-body">
+          <div class="filter-tags">
+            <div class="filter-tag">CEO</div>
+            <div class="filter-tag active">CFO</div>
+            <div class="filter-tag">National Day</div>
+            <div class="filter-tag">Staff</div>
+            <div class="filter-tag">Water</div>
+            <div class="filter-tag">HSE</div>
+            <div class="filter-tag">WUC</div>
+            <div class="filter-tag">Awards</div>
+          </div>
+          <a class="reset-link">Reset</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

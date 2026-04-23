@@ -872,15 +872,15 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'drupal',
-  'username' => 'drupal',
-  'password' => 'dac999ecc42b5ebfa8863edd499c23ebad5666a552921b07',
+  'database' => 'taqatransmission_one',
+  'username' => 'taqatransmission_one',
+  'password' => 'taqatransmission_one',
   'prefix' => '',
-  'host' => '10.117.66.38',
+  'host' => 'localhost',
   'port' => '3306',
   'isolation_level' => 'READ COMMITTED',
   'driver' => 'mysql',
   'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
   'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
 );
-$settings['config_sync_directory'] = 'sites/default/files/config_Wcf9u2KYrq7qwFLiKrqzo9rn5wtHpZNGjarzrhgljogItOdH2td1jOH8mDhB2L3luORP_P7KDQ/sync';
+$settings['config_sync_directory'] = 'sites/default/config/config_Wcf9u2KYrq7qwFLiKrqzo9rn5wtHpZNGjarzrhgljogItOdH2td1jOH8mDhB2L3luORP_P7KDQ/sync';

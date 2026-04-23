@@ -98,7 +98,7 @@ abstract class EntityResourceBase extends ResourceBase implements ResourceObject
     }
     $resource_objects = [];
     foreach ($entities as $entity) {
-      $resource_objects[$entity->id()] = $check_access
+      $resource_objects["{$entity->getEntityTypeId()}:{$entity->id()}"] = $check_access
         ? $this->entityAccessChecker->getAccessCheckedResourceObject($entity)
         : ResourceObject::createFromEntity($this->resourceTypeRepository->get($entity->getEntityTypeId(), $entity->bundle()), $entity);
     }
