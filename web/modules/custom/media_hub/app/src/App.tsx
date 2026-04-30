@@ -62,47 +62,6 @@ export function App() {
     <div className="min-h-screen bg-gray-50">
       <Hero />
 
-      {/* Quick access tiles */}
-      {taxonomy.categories.length > 0 && (
-        <div className="bg-white border-b border-gray-100 px-6 py-4">
-          <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Quick access
-          </span>
-          <div className="flex gap-3 overflow-x-auto pb-1">
-            {QUICK_ACCESS.map((qa) => {
-              const id = categoryByName.get(qa.categoryName.toLowerCase());
-              if (!id) return null;
-              const active = filters.categoryIds.has(id);
-              const bg = qa.image
-                ? `url(${qa.image})`
-                : QUICK_ACCESS_PLACEHOLDER_COLORS[qa.label] ?? 'linear-gradient(135deg, #1a2e4a 0%, #2d4a6b 100%)';
-              return (
-                <button
-                  key={qa.label}
-                  type="button"
-                  onClick={() => handleQuickAccess(qa.categoryName)}
-                  className={`shrink-0 relative rounded-xl overflow-hidden transition shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange ${
-                    active ? 'ring-2 ring-orange' : ''
-                  }`}
-                  style={{
-                    width: 140,
-                    height: 88,
-                    background: bg,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                >
-                  <div className="absolute inset-0 bg-black/30 hover:bg-black/20 transition" />
-                  <span className="absolute inset-0 flex items-end p-2.5 text-white text-sm font-semibold leading-tight">
-                    {qa.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       {/* Featured section */}
       <FeaturedSection items={featuredItems} onItemClick={setSelectedItem} />
 
@@ -119,6 +78,42 @@ export function App() {
         />
 
         <main className="flex-1 min-w-0">
+          {/* Quick access tiles */}
+          {taxonomy.categories.length > 0 && (
+            <div className="flex gap-3 flex-wrap mb-5">
+              {QUICK_ACCESS.map((qa) => {
+                const id = categoryByName.get(qa.categoryName.toLowerCase());
+                if (!id) return null;
+                const active = filters.categoryIds.has(id);
+                const bg = qa.image
+                  ? `url(${qa.image})`
+                  : QUICK_ACCESS_PLACEHOLDER_COLORS[qa.label] ?? 'linear-gradient(135deg, #1a2e4a 0%, #2d4a6b 100%)';
+                return (
+                  <button
+                    key={qa.label}
+                    type="button"
+                    onClick={() => handleQuickAccess(qa.categoryName)}
+                    className={`shrink-0 relative rounded-xl overflow-hidden transition shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange ${
+                      active ? 'ring-2 ring-orange' : ''
+                    }`}
+                    style={{
+                      width: 140,
+                      height: 88,
+                      background: bg,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-black/30 hover:bg-black/20 transition" />
+                    <span className="absolute inset-0 flex items-end p-2.5 text-white text-sm font-semibold leading-tight">
+                      {qa.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
               {loading
