@@ -34,6 +34,7 @@ export interface MediaItem {
   imageHeightPx?: number;
   imageDpi?: number;
   watermarked?: boolean;
+  featured?: boolean;
   // File metadata — from file entity, applies to all bundles
   filesize?: number;
 }

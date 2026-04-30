@@ -11,6 +11,7 @@ import {
 
 export interface UseMediaResult {
   items: MediaItem[];
+  featuredItems: MediaItem[];
   loading: boolean;
   loadingMore: boolean;
   hasMore: boolean;
@@ -213,9 +214,11 @@ export function useMedia(filters: FilterState): UseMediaResult {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const items = useMemo(() => applyTechnicalFilters(rawItems, filters), [rawItems, technicalFiltersKey(filters)]);
 
+  const featuredItems = useMemo(() => rawItems.filter((item) => item.featured), [rawItems]);
+
   const visibleIds = useMemo(() => computeVisibleIds(rawItems), [rawItems]);
 
-  return { items, loading, loadingMore, hasMore, error, loadMore, visibleIds };
+  return { items, featuredItems, loading, loadingMore, hasMore, error, loadMore, visibleIds };
 }
 
 function dedupeByDate(items: MediaItem[]): MediaItem[] {

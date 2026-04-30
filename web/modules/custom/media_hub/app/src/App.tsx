@@ -3,12 +3,21 @@ import { Hero } from './components/Hero';
 import { FilterSidebar } from './components/FilterSidebar';
 import { MediaGrid } from './components/MediaGrid';
 import { Lightbox } from './components/Lightbox';
+import { FeaturedSection } from './components/FeaturedSection';
 import { useMedia } from './hooks/useMedia';
 import { useTaxonomy } from './hooks/useTaxonomy';
 import { emptyFilters } from './types/media';
 import type { FilterState, MediaItem } from './types/media';
 
-const QUICK_ACCESS: { label: string; categoryName: string }[] = [
+// Placeholder colours until real background images are provided.
+const QUICK_ACCESS_PLACEHOLDER_COLORS: Record<string, string> = {
+  'Brand Assets': 'linear-gradient(135deg, #1a2e4a 0%, #2d4a6b 100%)',
+  Events: 'linear-gradient(135deg, #4a1a2e 0%, #6b2d4a 100%)',
+  People: 'linear-gradient(135deg, #1a4a2e 0%, #2d6b4a 100%)',
+  Sites: 'linear-gradient(135deg, #4a3a1a 0%, #6b5a2d 100%)',
+};
+
+const QUICK_ACCESS: { label: string; categoryName: string; image?: string }[] = [
   { label: 'Brand Assets', categoryName: 'Brand Assets' },
   { label: 'Events', categoryName: 'Events' },
   { label: 'People', categoryName: 'People' },
@@ -20,7 +29,7 @@ export function App() {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
 
   const { taxonomy } = useTaxonomy();
-  const { items, loading, loadingMore, hasMore, loadMore, error, visibleIds } = useMedia(filters);
+  const { items, featuredItems, loading, loadingMore, hasMore, loadMore, error, visibleIds } = useMedia(filters);
 
   const categoryByName = useMemo(() => {
     const map = new Map<string, string>();
@@ -51,38 +60,51 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Hero
-        search={filters.search}
-        onSearch={(s) => setFilters((prev) => ({ ...prev, search: s }))}
-      />
+      <Hero />
 
-      {/* Quick access strip */}
+      {/* Quick access tiles */}
       {taxonomy.categories.length > 0 && (
-        <div className="bg-white border-b border-gray-100 px-6 py-3 flex items-center gap-3 overflow-x-auto">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider shrink-0">
-            Quick access:
+        <div className="bg-white border-b border-gray-100 px-6 py-4">
+          <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            Quick access
           </span>
-          {QUICK_ACCESS.map((qa) => {
-            const id = categoryByName.get(qa.categoryName.toLowerCase());
-            if (!id) return null;
-            const active = filters.categoryIds.has(id);
-            return (
-              <button
-                key={qa.label}
-                type="button"
-                onClick={() => handleQuickAccess(qa.categoryName)}
-                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition ${
-                  active
-                    ? 'bg-orange text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-navy hover:text-white'
-                }`}
-              >
-                {qa.label}
-              </button>
-            );
-          })}
+          <div className="flex gap-3 overflow-x-auto pb-1">
+            {QUICK_ACCESS.map((qa) => {
+              const id = categoryByName.get(qa.categoryName.toLowerCase());
+              if (!id) return null;
+              const active = filters.categoryIds.has(id);
+              const bg = qa.image
+                ? `url(${qa.image})`
+                : QUICK_ACCESS_PLACEHOLDER_COLORS[qa.label] ?? 'linear-gradient(135deg, #1a2e4a 0%, #2d4a6b 100%)';
+              return (
+                <button
+                  key={qa.label}
+                  type="button"
+                  onClick={() => handleQuickAccess(qa.categoryName)}
+                  className={`shrink-0 relative rounded-xl overflow-hidden transition shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange ${
+                    active ? 'ring-2 ring-orange' : ''
+                  }`}
+                  style={{
+                    width: 140,
+                    height: 88,
+                    background: bg,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/30 hover:bg-black/20 transition" />
+                  <span className="absolute inset-0 flex items-end p-2.5 text-white text-sm font-semibold leading-tight">
+                    {qa.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
+
+      {/* Featured section */}
+      <FeaturedSection items={featuredItems} onItemClick={setSelectedItem} />
 
       {/* Main layout */}
       <div className="flex gap-6 p-6 max-w-screen-2xl mx-auto items-start">
@@ -92,6 +114,8 @@ export function App() {
           visibleIds={visibleIds}
           loading={loading}
           onFilterChange={setFilters}
+          search={filters.search}
+          onSearch={(s) => setFilters((prev) => ({ ...prev, search: s }))}
         />
 
         <main className="flex-1 min-w-0">

@@ -176,6 +176,7 @@ function parseMediaItem(raw: Record<string, unknown>, fileMap: Map<string, FileE
     imageHeightPx: resolveField<number>(raw, 'field_image_height') ?? undefined,
     imageDpi: resolveField<number>(raw, 'field_image_resolution') ?? undefined,
     watermarked: resolveField<boolean>(raw, 'field_media_watermarked') ?? undefined,
+    featured: resolveField<boolean>(raw, 'field_featured') ?? false,
     filesize: primaryEntry?.filesize,
   };
 }

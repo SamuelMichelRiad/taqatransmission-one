@@ -35,6 +35,8 @@ interface FilterSidebarProps {
   visibleIds: VisibleIds;
   loading: boolean;
   onFilterChange: (filters: FilterState) => void;
+  search: string;
+  onSearch: (value: string) => void;
 }
 
 interface FilterGroupProps {
@@ -74,42 +76,21 @@ function FilterGroup({ label, terms, selected, onToggle }: FilterGroupProps) {
       </button>
 
       {open && (
-        <div className="px-4 pb-3 space-y-1.5">
+        <div className="px-3 pb-3 flex flex-wrap gap-1.5">
           {terms.map((term) => {
             const checked = selected.has(term.id);
             return (
               <button
                 key={term.id}
                 type="button"
-                className="flex items-center gap-2.5 cursor-pointer group text-left w-full"
                 onClick={() => onToggle(term.id)}
+                className={`px-2.5 py-1 rounded-full text-xs font-medium transition border ${
+                  checked
+                    ? 'bg-orange border-orange text-white'
+                    : 'bg-transparent border-white/20 text-white/60 hover:border-orange/50 hover:text-white'
+                }`}
               >
-                <span
-                  className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition ${
-                    checked
-                      ? 'bg-orange border-orange'
-                      : 'bg-transparent border-white/30 group-hover:border-orange/60'
-                  }`}
-                >
-                  {checked && (
-                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 8" fill="none">
-                      <path
-                        d="M1 4l3 3 5-6"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </span>
-                <span
-                  className={`text-sm transition ${
-                    checked ? 'text-orange' : 'text-white/70 group-hover:text-white'
-                  }`}
-                >
-                  {term.name}
-                </span>
+                {term.name}
               </button>
             );
           })}
@@ -187,6 +168,8 @@ export function FilterSidebar({
   visibleIds,
   loading,
   onFilterChange,
+  search,
+  onSearch,
 }: FilterSidebarProps) {
   function toggle(field: IdFilterKey, id: string) {
     const current = new Set(filters[field]);
@@ -282,6 +265,34 @@ export function FilterSidebar({
             Clear all
           </button>
         )}
+      </div>
+
+      {/* Search */}
+      <div className="px-3 py-3 border-b border-white/10">
+        <div className="relative">
+          <svg
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-white/40"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => onSearch(e.target.value)}
+            placeholder="Search media…"
+            className="w-full pl-8 pr-3 py-2 rounded-md bg-white/10 border border-white/20 text-white text-sm placeholder-white/40 focus:outline-none focus:border-orange transition"
+          />
+        </div>
       </div>
 
       {/* Taxonomy filters */}

@@ -40,6 +40,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Category')).toBeInTheDocument();
@@ -56,6 +58,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Brand Assets')).toBeInTheDocument();
@@ -77,6 +81,8 @@ describe('FilterSidebar', () => {
         visibleIds={partial}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Brand Assets')).toBeInTheDocument();
@@ -91,6 +97,8 @@ describe('FilterSidebar', () => {
         visibleIds={emptyVisibleIds()}
         loading={true}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Brand Assets')).toBeInTheDocument();
@@ -107,6 +115,8 @@ describe('FilterSidebar', () => {
         visibleIds={partial}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Events')).toBeInTheDocument();
@@ -121,6 +131,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={onChange}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByText('Brand Assets'));
@@ -139,6 +151,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={onChange}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByText('Brand Assets'));
@@ -155,6 +169,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.queryByText('Clear all')).not.toBeInTheDocument();
@@ -166,6 +182,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Clear all')).toBeInTheDocument();
@@ -186,6 +204,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={onChange}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByText('Clear all'));
@@ -211,6 +231,8 @@ describe('FilterSidebar', () => {
         visibleIds={allVisible}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Brand Assets')).toBeVisible();
@@ -237,6 +259,8 @@ describe('FilterSidebar', () => {
         visibleIds={withTech}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Technical')).toBeInTheDocument();
@@ -269,6 +293,8 @@ describe('FilterSidebar', () => {
         visibleIds={withOrientations}
         loading={false}
         onFilterChange={onChange}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     await userEvent.click(screen.getByText('Landscape'));
@@ -289,6 +315,8 @@ describe('FilterSidebar', () => {
         visibleIds={withBundles}
         loading={false}
         onFilterChange={vi.fn()}
+        search=""
+        onSearch={vi.fn()}
       />,
     );
     expect(screen.getByText('Media Type')).toBeInTheDocument();
