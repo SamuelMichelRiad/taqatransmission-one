@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { MediaItem } from '../types/media';
 
 interface LightboxProps {
@@ -13,6 +13,12 @@ export function Lightbox({ item, allItems, onClose, onNavigate }: LightboxProps)
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < allItems.length - 1;
   const dialogRef = useRef<HTMLDivElement>(null);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  // Reset loading state whenever the displayed item changes.
+  useEffect(() => {
+    setImageLoading(true);
+  }, [item.id]);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -71,11 +77,21 @@ export function Lightbox({ item, allItems, onClose, onNavigate }: LightboxProps)
 
     if (item.fullUrl) {
       return (
-        <img
-          src={item.fullUrl}
-          alt={item.name}
-          className="max-w-full max-h-[70vh] object-contain rounded-lg"
-        />
+        <div className="relative flex items-center justify-center">
+          {imageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full border-4 border-gray-200 border-t-orange animate-spin" />
+            </div>
+          )}
+          <img
+            key={item.id}
+            src={item.fullUrl}
+            alt={item.name}
+            className={`max-w-full max-h-[70vh] object-contain rounded-lg transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+            onLoad={() => setImageLoading(false)}
+            onError={() => setImageLoading(false)}
+          />
+        </div>
       );
     }
 
