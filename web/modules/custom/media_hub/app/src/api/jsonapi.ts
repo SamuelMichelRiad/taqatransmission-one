@@ -10,6 +10,14 @@ function api(path: string): string {
   return `${basePath}jsonapi/${path}`;
 }
 
+let assetBase = '/';
+export function setAssetBase(path: string): void {
+  assetBase = path;
+}
+export function assetUrl(path: string): string {
+  return `${assetBase}${path}`;
+}
+
 // Handle both standard JSON:API (item.attributes.key) and the flattened
 // structure used on this Drupal site (fields at root level of each item).
 export function resolveField<T>(item: Record<string, unknown>, key: string): T | undefined {

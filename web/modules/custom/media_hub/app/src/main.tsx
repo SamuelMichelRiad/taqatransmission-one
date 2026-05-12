@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { setBasePath } from './api/jsonapi';
+import { setBasePath, setAssetBase } from './api/jsonapi';
 import { App } from './App';
 import './index.css';
 
@@ -9,6 +9,7 @@ if (!rootEl) throw new Error('#media-hub-root not found');
 
 const basePath = rootEl.dataset['basePath'] ?? '/';
 setBasePath(basePath);
+setAssetBase(rootEl.dataset['assetBase'] ?? basePath);
 
 createRoot(rootEl).render(
   <StrictMode>

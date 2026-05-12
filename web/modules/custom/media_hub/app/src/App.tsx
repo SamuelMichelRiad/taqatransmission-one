@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { assetUrl } from './api/jsonapi';
 import { Hero } from './components/Hero';
 import { FilterSidebar } from './components/FilterSidebar';
 import { MediaGrid } from './components/MediaGrid';
@@ -9,18 +10,12 @@ import { useTaxonomy } from './hooks/useTaxonomy';
 import { emptyFilters } from './types/media';
 import type { FilterState, MediaItem } from './types/media';
 
-// Placeholder colours until real background images are provided.
-const QUICK_ACCESS_PLACEHOLDER_COLORS: Record<string, string> = {
-  'Brand Assets': 'linear-gradient(135deg, #1a2e4a 0%, #2d4a6b 100%)',
-  Events: 'linear-gradient(135deg, #4a1a2e 0%, #6b2d4a 100%)',
-  People: 'linear-gradient(135deg, #1a4a2e 0%, #2d6b4a 100%)',
-  Sites: 'linear-gradient(135deg, #4a3a1a 0%, #6b5a2d 100%)',
-};
+const QUICK_ACCESS_FALLBACK_COLOR = 'linear-gradient(135deg, #4a3a1a 0%, #6b5a2d 100%)';
 
-const QUICK_ACCESS: { label: string; categoryName: string; image?: string }[] = [
-  { label: 'Brand Assets', categoryName: 'Brand Assets' },
-  { label: 'Events', categoryName: 'Events' },
-  { label: 'People', categoryName: 'People' },
+const QUICK_ACCESS: { label: string; categoryName: string; imageFile?: string }[] = [
+  { label: 'Brand Assets', categoryName: 'Brand Assets', imageFile: 'images/ASSETS.jpg' },
+  { label: 'Events', categoryName: 'Events', imageFile: 'images/EVENTS.jpg' },
+  { label: 'People', categoryName: 'People', imageFile: 'images/PEOPLE.jpg' },
   { label: 'Sites', categoryName: 'Sites' },
 ];
 
@@ -85,9 +80,7 @@ export function App() {
                 const id = categoryByName.get(qa.categoryName.toLowerCase());
                 if (!id) return null;
                 const active = filters.categoryIds.has(id);
-                const bg = qa.image
-                  ? `url(${qa.image})`
-                  : QUICK_ACCESS_PLACEHOLDER_COLORS[qa.label] ?? 'linear-gradient(135deg, #1a2e4a 0%, #2d4a6b 100%)';
+                const bg = qa.imageFile ? `url(${assetUrl(qa.imageFile)})` : QUICK_ACCESS_FALLBACK_COLOR;
                 return (
                   <button
                     key={qa.label}
@@ -97,7 +90,7 @@ export function App() {
                       active ? 'ring-2 ring-orange' : ''
                     }`}
                     style={{
-                      height: 88,
+                      height: 140,
                       background: bg,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
@@ -105,7 +98,7 @@ export function App() {
                   >
                     <div className="absolute inset-0 bg-black/30 hover:bg-black/20 transition" />
                     <span className="absolute inset-0 flex items-center justify-center text-white text-sm font-semibold leading-tight text-center px-2">
-                      {qa.label}
+                      {qa.label.toUpperCase()}
                     </span>
                   </button>
                 );
