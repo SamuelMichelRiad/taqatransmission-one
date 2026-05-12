@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.media_library
+    - field.field.media.image.field_featured
     - field.field.media.image.field_image_color_model
     - field.field.media.image.field_image_graphical_element
     - field.field.media.image.field_image_height
@@ -47,6 +48,7 @@ content:
     region: content
 hidden:
   created: true
+  field_featured: true
   field_image_color_model: true
   field_image_graphical_element: true
   field_image_height: true

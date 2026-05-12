@@ -1,0 +1,21 @@
+uuid: dac478f1-00c9-4cd5-abe8-4fbd94fea9f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_featured
+    - media.type.audio
+id: media.audio.field_featured
+field_name: field_featured
+entity_type: media
+bundle: audio
+label: Featured
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

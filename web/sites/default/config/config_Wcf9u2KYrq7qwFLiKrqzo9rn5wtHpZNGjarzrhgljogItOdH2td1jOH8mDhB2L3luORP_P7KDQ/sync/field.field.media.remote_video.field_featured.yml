@@ -1,0 +1,21 @@
+uuid: 34e40c15-bbf2-4a27-ae90-084af4e7b932
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_featured
+    - media.type.remote_video
+id: media.remote_video.field_featured
+field_name: field_featured
+entity_type: media
+bundle: remote_video
+label: Featured
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

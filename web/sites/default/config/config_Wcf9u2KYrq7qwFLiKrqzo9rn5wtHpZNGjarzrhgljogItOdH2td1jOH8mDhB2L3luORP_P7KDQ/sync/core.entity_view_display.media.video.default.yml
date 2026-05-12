@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.media.video.field_featured
     - field.field.media.video.field_media_video_file
     - media.type.video
   module:
@@ -14,6 +15,16 @@ targetEntityType: media
 bundle: video
 mode: default
 content:
+  field_featured:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_media_video_file:
     type: file_video
     label: visually_hidden
@@ -23,9 +34,9 @@ content:
       loop: false
       multiple_file_display_type: tags
       muted: false
+      playsinline: false
       width: 640
       height: 480
-      playsinline: false
     third_party_settings: {  }
     weight: 0
     region: content

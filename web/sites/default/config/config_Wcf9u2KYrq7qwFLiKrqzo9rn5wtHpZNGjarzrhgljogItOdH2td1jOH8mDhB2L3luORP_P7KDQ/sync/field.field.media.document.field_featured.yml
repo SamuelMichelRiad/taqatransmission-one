@@ -1,0 +1,21 @@
+uuid: 7cd3207f-8a87-414b-9fa5-eb813bcb7bbe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_featured
+    - media.type.document
+id: media.document.field_featured
+field_name: field_featured
+entity_type: media
+bundle: document
+label: Featured
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.media.audio.field_featured
     - field.field.media.audio.field_media_audio_file
     - media.type.audio
   module:
@@ -20,6 +21,13 @@ content:
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_featured:
+    type: boolean_checkbox
+    weight: 101
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_media_audio_file:
     type: file_generic

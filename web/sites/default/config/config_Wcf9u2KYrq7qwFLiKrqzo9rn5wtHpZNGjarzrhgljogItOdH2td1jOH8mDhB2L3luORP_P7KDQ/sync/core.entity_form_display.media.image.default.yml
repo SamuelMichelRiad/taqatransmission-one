@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.media.image.field_featured
     - field.field.media.image.field_image_color_model
     - field.field.media.image.field_image_graphical_element
     - field.field.media.image.field_image_height
@@ -123,6 +124,13 @@ content:
     weight: 3
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_featured:
+    type: boolean_checkbox
+    weight: 101
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_image_color_model:
     type: options_buttons
