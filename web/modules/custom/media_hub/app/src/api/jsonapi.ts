@@ -45,6 +45,33 @@ function resolveRefArray(item: Record<string, unknown>, field: string): Array<{ 
   return [];
 }
 
+// Image alt text lives in the field_media_image reference's `meta.alt`
+// (flattened: field_media_image.meta.alt; standard: relationships.field_media_image.data.meta.alt).
+function resolveImageAlt(item: Record<string, unknown>): string {
+  const readAlt = (obj: unknown): string | undefined => {
+    if (!obj || typeof obj !== 'object') return undefined;
+    const meta = (obj as Record<string, unknown>)['meta'] as Record<string, unknown> | undefined;
+    const alt = meta?.['alt'];
+    return typeof alt === 'string' && alt.trim() ? alt.trim() : undefined;
+  };
+
+  const val = resolveField<unknown>(item, 'field_media_image');
+  if (val) {
+    const direct = readAlt(val);
+    if (direct) return direct;
+    const data = (val as Record<string, unknown>)['data'];
+    const fromData = readAlt(data);
+    if (fromData) return fromData;
+  }
+
+  const rels = item['relationships'] as Record<string, unknown> | undefined;
+  const rel = rels?.['field_media_image'] as Record<string, unknown> | undefined;
+  const fromRel = readAlt(rel?.['data']);
+  if (fromRel) return fromRel;
+
+  return '';
+}
+
 function resolveRefSingle(item: Record<string, unknown>, field: string): { id: string } | null {
   // Try flattened (root level) and attributes
   const val = resolveField<unknown>(item, field);
@@ -156,9 +183,13 @@ function parseMediaItem(raw: Record<string, unknown>, fileMap: Map<string, FileE
     bundle === 'document' ? documentFileEntry :
     undefined;
 
+  const fileName = (resolveField<string>(raw, 'name') ?? (raw['name'] as string) ?? '') as string;
+  const altText = resolveImageAlt(raw);
+
   return {
     id: raw['id'] as string,
-    name: (resolveField<string>(raw, 'name') ?? (raw['name'] as string) ?? '') as string,
+    // Prefer the asset's alt text; fall back to the raw file name.
+    name: altText || fileName,
     bundle,
     thumbnailUrl,
     fullUrl,

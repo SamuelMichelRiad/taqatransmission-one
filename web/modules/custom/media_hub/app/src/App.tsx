@@ -13,7 +13,6 @@ import type { FilterState, MediaItem } from './types/media';
 const QUICK_ACCESS_FALLBACK_COLOR = 'linear-gradient(135deg, #4a3a1a 0%, #6b5a2d 100%)';
 
 const QUICK_ACCESS: { label: string; categoryName: string; imageFile?: string }[] = [
-  { label: 'Brand Assets', categoryName: 'Brand Assets', imageFile: 'images/ASSETS.jpg' },
   { label: 'Events', categoryName: 'Events', imageFile: 'images/EVENTS.jpg' },
   { label: 'People', categoryName: 'People', imageFile: 'images/PEOPLE.jpg' },
   { label: 'Sites', categoryName: 'Sites' },

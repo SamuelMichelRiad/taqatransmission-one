@@ -138,6 +138,56 @@ describe('fetchMediaFirstPage', () => {
     expect(result.items[0].name).toBe('Test Image');
   });
 
+  it('uses image alt text as the name instead of the raw file name', async () => {
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (url.includes('/media/image')) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              data: [
+                {
+                  type: 'media--image',
+                  id: 'img-alt',
+                  name: 'DSC_0042.jpg',
+                  created: '2025-01-01T00:00:00+00:00',
+                  thumbnail: { type: 'file--file', id: 'file-1' },
+                  field_media_image: {
+                    type: 'file--file',
+                    id: 'file-1',
+                    meta: { alt: 'Wind turbines at sunset' },
+                  },
+                },
+              ],
+              included: [
+                {
+                  type: 'file--file',
+                  id: 'file-1',
+                  uri: { value: 'public://img.jpg', url: '/sites/default/files/img.jpg' },
+                },
+              ],
+              links: {},
+            }),
+        });
+      }
+      return Promise.resolve({ ok: false, status: 404, json: () => Promise.resolve({}) });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await fetchMediaFirstPage(emptyFilters());
+    expect(result.items[0].name).toBe('Wind turbines at sunset');
+  });
+
+  it('falls back to the file name when no alt text is present', async () => {
+    vi.stubGlobal(
+      'fetch',
+      makeFetchMock({ image: 'ok', video: 404, remote_video: 404, document: 404, audio: 404 }),
+    );
+
+    const result = await fetchMediaFirstPage(emptyFilters());
+    expect(result.items[0].name).toBe('Test Image');
+  });
+
   it('treats 400 as empty result (bundle missing filter field)', async () => {
     vi.stubGlobal(
       'fetch',

@@ -11,7 +11,7 @@ export function FeaturedSection({ items, onItemClick }: FeaturedSectionProps) {
   return (
     <section className="px-6 py-5 max-w-screen-2xl mx-auto">
       <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-        Featured
+        Suggestions For You
       </h2>
       <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory">
         {items.map((item) => (
@@ -20,7 +20,7 @@ export function FeaturedSection({ items, onItemClick }: FeaturedSectionProps) {
             type="button"
             onClick={() => onItemClick(item)}
             className="shrink-0 snap-start relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange"
-            style={{ width: 280, aspectRatio: '16 / 9' }}
+            style={{ width: 340, aspectRatio: '16 / 9' }}
           >
             {item.thumbnailUrl ? (
               <img
